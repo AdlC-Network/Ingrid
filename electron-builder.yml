@@ -1,8 +1,8 @@
-appId: 'modrealmslauncher'
-productName: 'ModRealms Launcher'
+appId: 'adlclauncher'
+productName: 'Ingrid Launcher'
 artifactName: '${productName}-setup-${version}.${ext}'
 
-copyright: 'Copyright © 2021 ModRealms'
+copyright: 'Copyright © 2021 Augure de la Chouette'
 
 asar: true
 compression: 'maximum'
@@ -40,9 +40,9 @@ mac:
 linux: 
   target: 'AppImage'
   maintainer: 'Ally'
-  vendor: 'ModRealms Network'
+  vendor: 'AdlC Network'
   synopsis: 'Modded Minecraft Launcher'
-  description: 'Custom launcher which allows users to join ModRealms. All mods, configurations, and updates are handled automatically.'
+  description: 'Custom launcher which allows users to join AdlC. All mods, configurations, and updates are handled automatically.'
   category: 'Game'
 
 

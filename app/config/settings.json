@@ -1,19 +1,19 @@
 {
-  "APP_DISPLAY_NAME": "ModRealms Launcher",
+  "APP_DISPLAY_NAME": "AdlC | Ingrid Launcher",
 
-  "WELCOME_HEADER_TEXT": "Welcome to ModRealms!",
+  "WELCOME_HEADER_TEXT": "Bienvenue !",
   "WELCOME_DESC_TEXT": "N/A",
   "WELCOME_DESC_CTA": "N/A",
 
   "WEBSITE_ENABLE": true,
-  "WEBSITE_URL": "https://modrealms.net",
-  "TWITTER_ENABLE": true,
-  "TWITTER_URL": "https://twitter.com/modrealms",
+  "WEBSITE_URL": "https://adlc.network",
+  "TWITTER_ENABLE": false,
+  "TWITTER_URL": "#",
   "INSTAGRAM_ENABLE": false,
   "INSTAGRAM_URL": "#",
-  "YOUTUBE_ENABLE": true,
-  "YOUTUBE_URL": "https://www.youtube.com/channel/UCx_iGrTo1z_ZuOf2w_Lfl1Q",
-  "DISCORD_ENABLE": true,
-  "DISCORD_URL": "https://discord.gg/tKKeTdc"
+  "YOUTUBE_ENABLE": false,
+  "YOUTUBE_URL": "#",
+  "DISCORD_ENABLE": false,
+  "DISCORD_URL": "#"
 
 }
