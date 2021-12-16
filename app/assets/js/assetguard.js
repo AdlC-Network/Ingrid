@@ -1,22 +1,22 @@
 // Requirements
-const AdmZip        = require('adm-zip')
-const async         = require('async')
-const child_process = require('child_process')
-const crypto        = require('crypto')
-const EventEmitter  = require('events')
-const fs            = require('fs-extra')
-const path          = require('path')
-const Registry      = require('winreg')
-const request       = require('request')
-const tar           = require('tar-fs')
-const zlib          = require('zlib')
+const AdmZip        = require('adm-zip');
+const async         = require('async');
+const child_process = require('child_process');
+const crypto        = require('crypto');
+const EventEmitter  = require('events');
+const fs            = require('fs-extra');
+const path          = require('path');
+const Registry      = require('winreg');
+const request       = require('request');
+const tar           = require('tar-fs');
+const zlib          = require('zlib');
 
-const LoggerUtil = require('./loggerutil')
-const ConfigManager = require('./configmanager')
-const DistroManager = require('./distromanager')
-const isDev         = require('./isdev')
+const LoggerUtil = require('./loggerutil');
+const ConfigManager = require('./configmanager');
+const DistroManager = require('./distromanager');
+const isDev         = require('./isdev');
 
-const loggerAG = LoggerUtil('%c[AssetGuard]', 'color: #000668; font-weight: bold')
+const loggerAG = LoggerUtil('%c[AssetGuard]', 'color: #000668; font-weight: bold');
 
 // Constants
 // const PLATFORM_MAP = {
@@ -39,11 +39,11 @@ class Asset {
      * @param {string} to The absolute local file path of the asset.
      */
     constructor(id, hash, size, from, to){
-        this.id = id
-        this.hash = hash
-        this.size = size
-        this.from = from
-        this.to = to
+        this.id = id;
+        this.hash = hash;
+        this.size = size;
+        this.from = from;
+        this.to = to;
     }
 }
 
@@ -54,15 +54,14 @@ class Library extends Asset {
      * Converts the process.platform OS names to match mojang's OS names.
      */
     static mojangFriendlyOS(){
-        const opSys = process.platform
+        const opSys = process.platform;
         if (opSys === 'darwin') {
-            return 'osx'
+            return 'osx';
         } else if (opSys === 'win32'){
-            return 'windows'
+            return 'windows';
         } else if (opSys === 'linux'){
-            return 'linux'
-        } else {
-            return 'unknown_os'
+            return 'linux';
+            return 'unknown_os';
         }
     }
 
@@ -83,22 +82,22 @@ class Library extends Asset {
     static validateRules(rules, natives){
         if(rules == null) {
             if(natives == null) {
-                return true
+                return true;
             } else {
-                return natives[Library.mojangFriendlyOS()] != null
+                return natives[Library.mojangFriendlyOS()] != null;
             }
         }
 
         for(let rule of rules){
-            const action = rule.action
-            const osProp = rule.os
+            const action = rule.action;
+            const osProp = rule.os;
             if(action != null && osProp != null){
-                const osName = osProp.name
-                const osMoj = Library.mojangFriendlyOS()
+                const osName = osProp.name;
+                const osMoj = Library.mojangFriendlyOS();
                 if(action === 'allow'){
-                    return osName === osMoj
+                    return osName === osMoj;
                 } else if(action === 'disallow'){
-                    return osName !== osMoj
+                    return osName !== osMoj;
                 }
             }
         }
@@ -121,8 +120,8 @@ class DistroModule extends Asset {
      * @param {string} type The the module type.
      */
     constructor(id, hash, size, from, to, type){
-        super(id, hash, size, from, to)
-        this.type = type
+        super(id, hash, size, from, to);
+        this.type = type;
     }
 
 }
@@ -141,9 +140,9 @@ class DLTracker {
      * @param {function(Asset)} callback Optional callback which is called when an asset finishes downloading.
      */
     constructor(dlqueue, dlsize, callback = null){
-        this.dlqueue = dlqueue
-        this.dlsize = dlsize
-        this.callback = callback
+        this.dlqueue = dlqueue;
+        this.dlsize = dlsize;
+        this.callback = callback;
     }
 
 }
@@ -158,67 +157,67 @@ class Util {
      * @param {string} actual The actual version.
      */
     static mcVersionAtLeast(desired, actual){
-        const des = desired.split('.')
-        const act = actual.split('.')
+        const des = desired.split('.');
+        const act = actual.split('.');
 
         for(let i=0; i<des.length; i++){
             if(!(parseInt(act[i]) >= parseInt(des[i]))){
-                return false
+                return false;
             }
         }
-        return true
+        return true;
     }
 
     static isForgeGradle3(mcVersion, forgeVersion) {
 
         if(Util.mcVersionAtLeast('1.13', mcVersion)) {
-            return true
+            return true;
         }
 
         try {
             
-            const forgeVer = forgeVersion.split('-')[1]
+            const forgeVer = forgeVersion.split('-')[1];
 
-            const maxFG2 = [14, 23, 5, 2847]
-            const verSplit = forgeVer.split('.').map(v => Number(v))
+            const maxFG2 = [14, 23, 5, 2847];
+            const verSplit = forgeVer.split('.').map(v => Number(v));
 
             for(let i=0; i<maxFG2.length; i++) {
                 if(verSplit[i] > maxFG2[i]) {
-                    return true
+                    return true;
                 } else if(verSplit[i] < maxFG2[i]) {
-                    return false
+                    return false;
                 }
             }
         
-            return false
+            return false;
 
         } catch(err) {
-            throw new Error('Forge version is complex (changed).. launcher requires a patch.')
+            throw new Error('Forge version is complex (changed).. launcher requires a patch.');
         }
     }
 
     static isAutoconnectBroken(forgeVersion) {
 
-        const minWorking = [31, 2, 15]
-        const verSplit = forgeVersion.split('.').map(v => Number(v))
+        const minWorking = [31, 2, 15];
+        const verSplit = forgeVersion.split('.').map(v => Number(v));
 
         if(verSplit[0] === 31) {
             for(let i=0; i<minWorking.length; i++) {
                 if(verSplit[i] > minWorking[i]) {
-                    return false
+                    return false;
                 } else if(verSplit[i] < minWorking[i]) {
-                    return true
+                    return true;
                 }
             }
         
-            return false
+            return false;
 
         }
         // catch(err) {
         //     throw new Error('Forge version is complex (changed).. launcher requires a patch.')
         // }
 
-        return false
+        return false;
     }
 
 }
@@ -227,8 +226,8 @@ class Util {
 class JavaGuard extends EventEmitter {
 
     constructor(mcVersion){
-        super()
-        this.mcVersion = mcVersion
+        super();
+        this.mcVersion = mcVersion;
     }
 
     // /**
@@ -285,20 +284,20 @@ class JavaGuard extends EventEmitter {
      * 
      * @returns {Promise.<OpenJDKData>} Promise which resolved to an object containing the JRE download data.
      */
-    static _latestOpenJDK(major = '8'){
+    static _latestOpenJDK(major = '17'){
 
         if(process.platform === 'darwin') {
-            return this._latestCorretto(major)
+            return this._latestCorretto(major);
         } else {
-            return this._latestAdoptOpenJDK(major)
+            return this._latestAdoptOpenJDK(major);
         }
     }
 
     static _latestAdoptOpenJDK(major) {
 
-        const sanitizedOS = process.platform === 'win32' ? 'windows' : (process.platform === 'darwin' ? 'mac' : process.platform)
+        const sanitizedOS = process.platform === 'win32' ? 'windows' : (process.platform === 'darwin' ? 'mac' : process.platform);
 
-        const url = `https://api.adoptopenjdk.net/v2/latestAssets/nightly/openjdk${major}?os=${sanitizedOS}&arch=x64&heap_size=normal&openjdk_impl=hotspot&type=jre`
+        const url = `https://api.adoptopenjdk.net/v2/latestAssets/nightly/openjdk${major}?os=${sanitizedOS}&arch=x64&heap_size=normal&openjdk_impl=hotspot&type=jre`;
         
         return new Promise((resolve, reject) => {
             request({url, json: true}, (err, resp, body) => {
@@ -307,39 +306,39 @@ class JavaGuard extends EventEmitter {
                         uri: body[0].binary_link,
                         size: body[0].binary_size,
                         name: body[0].binary_name
-                    })
+                    });
                 } else {
-                    resolve(null)
+                    resolve(null);
                 }
-            })
-        })
+            });
+        });
 
     }
 
     static _latestCorretto(major) {
 
-        let sanitizedOS, ext
+        let sanitizedOS, ext;
 
         switch(process.platform) {
             case 'win32':
-                sanitizedOS = 'windows'
-                ext = 'zip'
-                break
+                sanitizedOS = 'windows';
+                ext = 'zip';
+                break;
             case 'darwin':
-                sanitizedOS = 'macos'
-                ext = 'tar.gz'
-                break
+                sanitizedOS = 'macos';
+                ext = 'tar.gz';
+                break;
             case 'linux':
-                sanitizedOS = 'linux'
-                ext = 'tar.gz'
-                break
+                sanitizedOS = 'linux';
+                ext = 'tar.gz';
+                break;
             default:
-                sanitizedOS = process.platform
-                ext = 'tar.gz'
-                break
+                sanitizedOS = process.platform;
+                ext = 'tar.gz';
+                break;
         }
 
-        const url = `https://corretto.aws/downloads/latest/amazon-corretto-${major}-x64-${sanitizedOS}-jdk.${ext}`
+        const url = `https://corretto.aws/downloads/latest/amazon-corretto-${major}-x64-${sanitizedOS}-jdk.${ext}`;
 
         return new Promise((resolve, reject) => {
             request.head({url, json: true}, (err, resp) => {
@@ -348,12 +347,12 @@ class JavaGuard extends EventEmitter {
                         uri: url,
                         size: parseInt(resp.headers['content-length']),
                         name: url.substr(url.lastIndexOf('/')+1)
-                    })
+                    });
                 } else {
-                    resolve(null)
+                    resolve(null);
                 }
-            })
-        })
+            });
+        });
 
     }
 
@@ -366,13 +365,13 @@ class JavaGuard extends EventEmitter {
      */
     static javaExecFromRoot(rootDir){
         if(process.platform === 'win32'){
-            return path.join(rootDir, 'bin', 'javaw.exe')
+            return path.join(rootDir, 'bin', 'javaw.exe');
         } else if(process.platform === 'darwin'){
-            return path.join(rootDir, 'Contents', 'Home', 'bin', 'java')
+            return path.join(rootDir, 'Contents', 'Home', 'bin', 'java');
         } else if(process.platform === 'linux'){
-            return path.join(rootDir, 'bin', 'java')
+            return path.join(rootDir, 'bin', 'java');
         }
-        return rootDir
+        return rootDir;
     }
 
     /**
@@ -383,13 +382,13 @@ class JavaGuard extends EventEmitter {
      */
     static isJavaExecPath(pth){
         if(process.platform === 'win32'){
-            return pth.endsWith(path.join('bin', 'javaw.exe'))
+            return pth.endsWith(path.join('bin', 'javaw.exe'));
         } else if(process.platform === 'darwin'){
-            return pth.endsWith(path.join('bin', 'java'))
+            return pth.endsWith(path.join('bin', 'java'));
         } else if(process.platform === 'linux'){
-            return pth.endsWith(path.join('bin', 'java'))
+            return pth.endsWith(path.join('bin', 'java'));
         }
-        return false
+        return false;
     }
 
     /**
@@ -401,12 +400,12 @@ class JavaGuard extends EventEmitter {
         return new Promise((resolve, reject) => {
             request.get('https://launchermeta.mojang.com/mc/launcher.json', (err, resp, body) => {
                 if(err){
-                    resolve(null)
+                    resolve(null);
                 } else {
-                    resolve(JSON.parse(body))
+                    resolve(JSON.parse(body));
                 }
-            })
-        })
+            });
+        });
     }
 
     /**
@@ -418,11 +417,11 @@ class JavaGuard extends EventEmitter {
      * @returns Object containing the version information.
      */
     static parseJavaRuntimeVersion(verString){
-        const major = verString.split('.')[0]
+        const major = verString.split('.')[0];
         if(major == 1){
-            return JavaGuard._parseJavaRuntimeVersion_8(verString)
+            return JavaGuard._parseJavaRuntimeVersion_8(verString);
         } else {
-            return JavaGuard._parseJavaRuntimeVersion_9(verString)
+            return JavaGuard._parseJavaRuntimeVersion_9(verString);
         }
     }
 
@@ -436,13 +435,13 @@ class JavaGuard extends EventEmitter {
     static _parseJavaRuntimeVersion_8(verString){
         // 1.{major}.0_{update}-b{build}
         // ex. 1.8.0_152-b16
-        const ret = {}
-        let pts = verString.split('-')
-        ret.build = parseInt(pts[1].substring(1))
-        pts = pts[0].split('_')
-        ret.update = parseInt(pts[1])
-        ret.major = parseInt(pts[0].split('.')[1])
-        return ret
+        const ret = {};
+        let pts = verString.split('-');
+        ret.build = parseInt(pts[1].substring(1));
+        pts = pts[0].split('_');
+        ret.update = parseInt(pts[1]);
+        ret.major = parseInt(pts[0].split('.')[1]);
+        return ret;
     }
 
     /**
@@ -455,14 +454,14 @@ class JavaGuard extends EventEmitter {
     static _parseJavaRuntimeVersion_9(verString){
         // {major}.{minor}.{revision}+{build}
         // ex. 10.0.2+13
-        const ret = {}
-        let pts = verString.split('+')
-        ret.build = parseInt(pts[1])
-        pts = pts[0].split('.')
-        ret.major = parseInt(pts[0])
-        ret.minor = parseInt(pts[1])
-        ret.revision = parseInt(pts[2])
-        return ret
+        const ret = {};
+        let pts = verString.split('+');
+        ret.build = parseInt(pts[1]);
+        pts = pts[0].split('.');
+        ret.major = parseInt(pts[0]);
+        ret.minor = parseInt(pts[1]);
+        ret.revision = parseInt(pts[2]);
+        return ret;
     }
 
     /**
@@ -475,43 +474,43 @@ class JavaGuard extends EventEmitter {
      * The validity is stored inside the `valid` property.
      */
     _validateJVMProperties(stderr){
-        const res = stderr
-        const props = res.split('\n')
+        const res = stderr;
+        const props = res.split('\n');
 
-        const goal = 2
-        let checksum = 0
+        const goal = 2;
+        let checksum = 0;
 
-        const meta = {}
+        const meta = {};
 
         for(let i=0; i<props.length; i++){
             if(props[i].indexOf('sun.arch.data.model') > -1){
-                let arch = props[i].split('=')[1].trim()
-                arch = parseInt(arch)
-                loggerAG.log(props[i].trim())
+                let arch = props[i].split('=')[1].trim();
+                arch = parseInt(arch);
+                loggerAG.log(props[i].trim());
                 if(arch === 64){
-                    meta.arch = arch
-                    ++checksum
+                    meta.arch = arch;
+                    ++checksum;
                     if(checksum === goal){
-                        break
+                        break;
                     }
                 }
             } else if(props[i].indexOf('java.runtime.version') > -1){
-                let verString = props[i].split('=')[1].trim()
-                loggerAG.log(props[i].trim())
-                const verOb = JavaGuard.parseJavaRuntimeVersion(verString)
+                let verString = props[i].split('=')[1].trim();
+                loggerAG.log(props[i].trim());
+                const verOb = JavaGuard.parseJavaRuntimeVersion(verString);
                 if(verOb.major < 9){
                     // Java 8
                     if(verOb.major === 8 && verOb.update > 52){
-                        meta.version = verOb
-                        ++checksum
+                        meta.version = verOb;
+                        ++checksum;
                         if(checksum === goal){
-                            break
+                            break;
                         }
                     }
                 } else {
                     // Java 9+
                     if(Util.mcVersionAtLeast('1.13', this.mcVersion)){
-                        loggerAG.log('Java 9+ not yet tested.')
+                        loggerAG.log('Java 9+ not yet tested.');
                         /* meta.version = verOb
                         ++checksum
                         if(checksum === goal){
@@ -521,15 +520,15 @@ class JavaGuard extends EventEmitter {
                 }
                 // Space included so we get only the vendor.
             } else if(props[i].lastIndexOf('java.vendor ') > -1) {
-                let vendorName = props[i].split('=')[1].trim()
-                loggerAG.log(props[i].trim())
-                meta.vendor = vendorName
+                let vendorName = props[i].split('=')[1].trim();
+                loggerAG.log(props[i].trim());
+                meta.vendor = vendorName;
             }
         }
 
-        meta.valid = checksum === goal
+        meta.valid = checksum === goal;
         
-        return meta
+        return meta;
     }
 
     /**
@@ -549,26 +548,26 @@ class JavaGuard extends EventEmitter {
 
         return new Promise((resolve, reject) => {
             if(!JavaGuard.isJavaExecPath(binaryExecPath)){
-                resolve({valid: false})
+                resolve({valid: false});
             } else if(fs.existsSync(binaryExecPath)){
                 // Workaround (javaw.exe no longer outputs this information.)
-                loggerAG.log(typeof binaryExecPath)
+                loggerAG.log(typeof binaryExecPath);
                 if(binaryExecPath.indexOf('javaw.exe') > -1) {
-                    binaryExecPath.replace('javaw.exe', 'java.exe')
+                    binaryExecPath.replace('javaw.exe', 'java.exe');
                 }
                 child_process.exec('"' + binaryExecPath + '" -XshowSettings:properties', (err, stdout, stderr) => {
                     try {
                         // Output is stored in stderr?
-                        resolve(this._validateJVMProperties(stderr))
+                        resolve(this._validateJVMProperties(stderr));
                     } catch (err){
                         // Output format might have changed, validation cannot be completed.
-                        resolve({valid: false})
+                        resolve({valid: false});
                     }
-                })
+                });
             } else {
-                resolve({valid: false})
+                resolve({valid: false});
             }
-        })
+        });
         
     }
 
@@ -579,13 +578,13 @@ class JavaGuard extends EventEmitter {
      * @returns {string} The path defined by JAVA_HOME, if it exists. Otherwise null.
      */
     static _scanJavaHome(){
-        const jHome = process.env.JAVA_HOME
+        const jHome = process.env.JAVA_HOME;
         try {
-            let res = fs.existsSync(jHome)
-            return res ? jHome : null
+            let res = fs.existsSync(jHome);
+            return res ? jHome : null;
         } catch (err) {
             // Malformed JAVA_HOME property.
-            return null
+            return null;
         }
     }
 
@@ -610,92 +609,92 @@ class JavaGuard extends EventEmitter {
                 '\\SOFTWARE\\JavaSoft\\Java Development Kit'
             ]
 
-            let keysDone = 0
+            let keysDone = 0;
 
-            const candidates = new Set()
+            const candidates = new Set();
 
             for(let i=0; i<regKeys.length; i++){
                 const key = new Registry({
                     hive: Registry.HKLM,
                     key: regKeys[i],
                     arch: 'x64'
-                })
+                });
                 key.keyExists((err, exists) => {
                     if(exists) {
                         key.keys((err, javaVers) => {
                             if(err){
-                                keysDone++
-                                loggerAG.error(err)
+                                keysDone++;
+                                loggerAG.error(err);
 
                                 // REG KEY DONE
                                 // DUE TO ERROR
                                 if(keysDone === regKeys.length){
-                                    resolve(candidates)
+                                    resolve(candidates);
                                 }
                             } else {
                                 if(javaVers.length === 0){
                                     // REG KEY DONE
                                     // NO SUBKEYS
-                                    keysDone++
+                                    keysDone++;
                                     if(keysDone === regKeys.length){
-                                        resolve(candidates)
+                                        resolve(candidates);
                                     }
                                 } else {
 
-                                    let numDone = 0
+                                    let numDone = 0;
 
                                     for(let j=0; j<javaVers.length; j++){
                                         const javaVer = javaVers[j]
-                                        const vKey = javaVer.key.substring(javaVer.key.lastIndexOf('\\')+1)
+                                        const vKey = javaVer.key.substring(javaVer.key.lastIndexOf('\\')+1);
                                         // Only Java 8 is supported currently.
                                         if(parseFloat(vKey) === 1.8){
                                             javaVer.get('JavaHome', (err, res) => {
-                                                const jHome = res.value
+                                                const jHome = res.value;
                                                 if(jHome.indexOf('(x86)') === -1){
-                                                    candidates.add(jHome)
+                                                    candidates.add(jHome);
                                                 }
 
                                                 // SUBKEY DONE
 
-                                                numDone++
+                                                numDone++;
                                                 if(numDone === javaVers.length){
-                                                    keysDone++
+                                                    keysDone++;
                                                     if(keysDone === regKeys.length){
-                                                        resolve(candidates)
+                                                        resolve(candidates);
                                                     }
                                                 }
-                                            })
+                                            });
                                         } else {
 
                                             // SUBKEY DONE
                                             // NOT JAVA 8
 
-                                            numDone++
+                                            numDone++;
                                             if(numDone === javaVers.length){
-                                                keysDone++
+                                                keysDone++;
                                                 if(keysDone === regKeys.length){
-                                                    resolve(candidates)
+                                                    resolve(candidates);
                                                 }
                                             }
                                         }
                                     }
                                 }
                             }
-                        })
+                        });
                     } else {
 
                         // REG KEY DONE
                         // DUE TO NON-EXISTANCE
 
-                        keysDone++
+                        keysDone++;
                         if(keysDone === regKeys.length){
-                            resolve(candidates)
+                            resolve(candidates);
                         }
                     }
-                })
+                });
             }
 
-        })
+        });
         
     }
 
@@ -706,9 +705,9 @@ class JavaGuard extends EventEmitter {
      */
     static _scanInternetPlugins(){
         // /Library/Internet Plug-Ins/JavaAppletPlugin.plugin/Contents/Home/bin/java
-        const pth = '/Library/Internet Plug-Ins/JavaAppletPlugin.plugin'
-        const res = fs.existsSync(JavaGuard.javaExecFromRoot(pth))
-        return res ? pth : null
+        const pth = '/Library/Internet Plug-Ins/JavaAppletPlugin.plugin';
+        const res = fs.existsSync(JavaGuard.javaExecFromRoot(pth));
+        return res ? pth : null;
     }
 
     /**
@@ -720,23 +719,23 @@ class JavaGuard extends EventEmitter {
      */
     static async _scanFileSystem(scanDir){
 
-        let res = new Set()
+        let res = new Set();
 
         if(await fs.pathExists(scanDir)) {
 
-            const files = await fs.readdir(scanDir)
+            const files = await fs.readdir(scanDir);
             for(let i=0; i<files.length; i++){
 
-                const combinedPath = path.join(scanDir, files[i])
-                const execPath = JavaGuard.javaExecFromRoot(combinedPath)
+                const combinedPath = path.join(scanDir, files[i]);
+                const execPath = JavaGuard.javaExecFromRoot(combinedPath);
 
                 if(await fs.pathExists(execPath)) {
-                    res.add(combinedPath)
+                    res.add(combinedPath);
                 }
             }
         }
 
-        return res
+        return res;
 
     }
 
@@ -748,22 +747,22 @@ class JavaGuard extends EventEmitter {
      */
     async _validateJavaRootSet(rootSet){
 
-        const rootArr = Array.from(rootSet)
-        const validArr = []
+        const rootArr = Array.from(rootSet);
+        const validArr = [];
 
         for(let i=0; i<rootArr.length; i++){
 
-            const execPath = JavaGuard.javaExecFromRoot(rootArr[i])
-            const metaOb = await this._validateJavaBinary(execPath)
+            const execPath = JavaGuard.javaExecFromRoot(rootArr[i]);
+            const metaOb = await this._validateJavaBinary(execPath);
 
             if(metaOb.valid){
-                metaOb.execPath = execPath
-                validArr.push(metaOb)
+                metaOb.execPath = execPath;
+                validArr.push(metaOb);
             }
 
         }
 
-        return validArr
+        return validArr;
 
     }
 
@@ -786,16 +785,16 @@ class JavaGuard extends EventEmitter {
     
                             // Same version, give priority to JRE.
                             if(a.execPath.toLowerCase().indexOf('jdk') > -1){
-                                return b.execPath.toLowerCase().indexOf('jdk') > -1 ? 0 : 1
+                                return b.execPath.toLowerCase().indexOf('jdk') > -1 ? 0 : 1;
                             } else {
-                                return -1
+                                return -1;
                             }
     
                         } else {
-                            return a.version.build > b.version.build ? -1 : 1
+                            return a.version.build > b.version.build ? -1 : 1;
                         }
                     } else {
-                        return  a.version.update > b.version.update ? -1 : 1
+                        return  a.version.update > b.version.update ? -1 : 1;
                     }
                 } else {
                     // Java 9+
@@ -804,25 +803,25 @@ class JavaGuard extends EventEmitter {
     
                             // Same version, give priority to JRE.
                             if(a.execPath.toLowerCase().indexOf('jdk') > -1){
-                                return b.execPath.toLowerCase().indexOf('jdk') > -1 ? 0 : 1
+                                return b.execPath.toLowerCase().indexOf('jdk') > -1 ? 0 : 1;
                             } else {
-                                return -1
+                                return -1;
                             }
     
                         } else {
-                            return a.version.revision > b.version.revision ? -1 : 1
+                            return a.version.revision > b.version.revision ? -1 : 1;
                         }
                     } else {
-                        return  a.version.minor > b.version.minor ? -1 : 1
+                        return  a.version.minor > b.version.minor ? -1 : 1;
                     }
                 }
 
             } else {
-                return a.version.major > b.version.major ? -1 : 1
+                return a.version.major > b.version.major ? -1 : 1;
             }
-        })
+        });
 
-        return retArr
+        return retArr;
     }
 
     /**
@@ -842,35 +841,35 @@ class JavaGuard extends EventEmitter {
     async _win32JavaValidate(dataDir){
 
         // Get possible paths from the registry.
-        let pathSet1 = await JavaGuard._scanRegistry()
+        let pathSet1 = await JavaGuard._scanRegistry();
         if(pathSet1.size === 0){
             // Do a manual file system scan of program files.
             pathSet1 = new Set([
                 ...pathSet1,
                 ...(await JavaGuard._scanFileSystem('C:\\Program Files\\Java')),
                 ...(await JavaGuard._scanFileSystem('C:\\Program Files\\AdoptOpenJDK'))
-            ])
+            ]);
         }
 
         // Get possible paths from the data directory.
-        const pathSet2 = await JavaGuard._scanFileSystem(path.join(dataDir, 'runtime', 'x64'))
+        const pathSet2 = await JavaGuard._scanFileSystem(path.join(dataDir, 'runtime', 'x64'));
 
         // Merge the results.
-        const uberSet = new Set([...pathSet1, ...pathSet2])
+        const uberSet = new Set([...pathSet1, ...pathSet2]);
 
         // Validate JAVA_HOME.
-        const jHome = JavaGuard._scanJavaHome()
+        const jHome = JavaGuard._scanJavaHome();
         if(jHome != null && jHome.indexOf('(x86)') === -1){
-            uberSet.add(jHome)
+            uberSet.add(jHome);
         }
 
-        let pathArr = await this._validateJavaRootSet(uberSet)
-        pathArr = JavaGuard._sortValidJavaArray(pathArr)
+        let pathArr = await this._validateJavaRootSet(uberSet);
+        pathArr = JavaGuard._sortValidJavaArray(pathArr);
 
         if(pathArr.length > 0){
-            return pathArr[0].execPath
+            return pathArr[0].execPath;
         } else {
-            return null
+            return null;
         }
 
     }
@@ -890,34 +889,34 @@ class JavaGuard extends EventEmitter {
      */
     async _darwinJavaValidate(dataDir){
 
-        const pathSet1 = await JavaGuard._scanFileSystem('/Library/Java/JavaVirtualMachines')
-        const pathSet2 = await JavaGuard._scanFileSystem(path.join(dataDir, 'runtime', 'x64'))
+        const pathSet1 = await JavaGuard._scanFileSystem('/Library/Java/JavaVirtualMachines');
+        const pathSet2 = await JavaGuard._scanFileSystem(path.join(dataDir, 'runtime', 'x64'));
 
-        const uberSet = new Set([...pathSet1, ...pathSet2])
+        const uberSet = new Set([...pathSet1, ...pathSet2]);
 
         // Check Internet Plugins folder.
-        const iPPath = JavaGuard._scanInternetPlugins()
+        const iPPath = JavaGuard._scanInternetPlugins();
         if(iPPath != null){
-            uberSet.add(iPPath)
+            uberSet.add(iPPath);
         }
 
         // Check the JAVA_HOME environment variable.
-        let jHome = JavaGuard._scanJavaHome()
+        let jHome = JavaGuard._scanJavaHome();
         if(jHome != null){
             // Ensure we are at the absolute root.
             if(jHome.contains('/Contents/Home')){
-                jHome = jHome.substring(0, jHome.indexOf('/Contents/Home'))
+                jHome = jHome.substring(0, jHome.indexOf('/Contents/Home'));
             }
-            uberSet.add(jHome)
+            uberSet.add(jHome);
         }
 
-        let pathArr = await this._validateJavaRootSet(uberSet)
-        pathArr = JavaGuard._sortValidJavaArray(pathArr)
+        let pathArr = await this._validateJavaRootSet(uberSet);
+        pathArr = JavaGuard._sortValidJavaArray(pathArr);
 
         if(pathArr.length > 0){
-            return pathArr[0].execPath
+            return pathArr[0].execPath;
         } else {
-            return null
+            return null;
         }
     }
 
@@ -935,24 +934,24 @@ class JavaGuard extends EventEmitter {
      */
     async _linuxJavaValidate(dataDir){
 
-        const pathSet1 = await JavaGuard._scanFileSystem('/usr/lib/jvm')
-        const pathSet2 = await JavaGuard._scanFileSystem(path.join(dataDir, 'runtime', 'x64'))
+        const pathSet1 = await JavaGuard._scanFileSystem('/usr/lib/jvm');
+        const pathSet2 = await JavaGuard._scanFileSystem(path.join(dataDir, 'runtime', 'x64'));
         
-        const uberSet = new Set([...pathSet1, ...pathSet2])
+        const uberSet = new Set([...pathSet1, ...pathSet2]);
 
         // Validate JAVA_HOME
-        const jHome = JavaGuard._scanJavaHome()
+        const jHome = JavaGuard._scanJavaHome();
         if(jHome != null){
-            uberSet.add(jHome)
+            uberSet.add(jHome);
         }
         
-        let pathArr = await this._validateJavaRootSet(uberSet)
-        pathArr = JavaGuard._sortValidJavaArray(pathArr)
+        let pathArr = await this._validateJavaRootSet(uberSet);
+        pathArr = JavaGuard._sortValidJavaArray(pathArr);
 
         if(pathArr.length > 0){
-            return pathArr[0].execPath
+            return pathArr[0].execPath;
         } else {
-            return null
+            return null;
         }
     }
 
@@ -963,7 +962,7 @@ class JavaGuard extends EventEmitter {
      * @returns {string} A path to a valid x64 Java installation, null if none found.
      */
     async validateJava(dataDir){
-        return await this['_' + process.platform + 'JavaValidate'](dataDir)
+        return await this['_' + process.platform + 'JavaValidate'](dataDir);
     }
 
 }
@@ -991,17 +990,17 @@ class AssetGuard extends EventEmitter {
      * to finalize installation.
      */
     constructor(commonPath, javaexec){
-        super()
-        this.totaldlsize = 0
-        this.progress = 0
-        this.assets = new DLTracker([], 0)
-        this.libraries = new DLTracker([], 0)
-        this.files = new DLTracker([], 0)
-        this.forge = new DLTracker([], 0)
-        this.java = new DLTracker([], 0)
-        this.extractQueue = []
-        this.commonPath = commonPath
-        this.javaexec = javaexec
+        super();
+        this.totaldlsize = 0;
+        this.progress = 0;
+        this.assets = new DLTracker([], 0);
+        this.libraries = new DLTracker([], 0);
+        this.files = new DLTracker([], 0);
+        this.forge = new DLTracker([], 0);
+        this.java = new DLTracker([], 0);
+        this.extractQueue = [];
+        this.commonPath = commonPath;
+        this.javaexec = javaexec;
     }
 
     // Static Utility Functions
@@ -1018,7 +1017,7 @@ class AssetGuard extends EventEmitter {
      * @returns {string} The calculated hash in hex.
      */
     static _calculateHash(buf, algo){
-        return crypto.createHash(algo).update(buf).digest('hex')
+        return crypto.createHash(algo).update(buf).digest('hex');
     }
 
     /**
@@ -1029,16 +1028,16 @@ class AssetGuard extends EventEmitter {
      * @returns {Object} An object with keys being the file names, and values being the hashes.
      */
     static _parseChecksumsFile(content){
-        let finalContent = {}
-        let lines = content.split('\n')
+        let finalContent = {};
+        let lines = content.split('\n');
         for(let i=0; i<lines.length; i++){
-            let bits = lines[i].split(' ')
+            let bits = lines[i].split(' ');
             if(bits[1] == null) {
-                continue
+                continue;
             }
-            finalContent[bits[1]] = bits[0]
+            finalContent[bits[1]] = bits[0];
         }
-        return finalContent
+        return finalContent;
     }
 
     /**
@@ -1053,14 +1052,14 @@ class AssetGuard extends EventEmitter {
         if(fs.existsSync(filePath)){
             //No hash provided, have to assume it's good.
             if(hash == null){
-                loggerAG.log('There\'s no hash clientside, we assume it doesn\'t exist and all is good!')
-                return true
+                loggerAG.log('There\'s no hash clientside, we assume it doesn\'t exist and all is good!');
+                return true;
             }
-            let buf = fs.readFileSync(filePath)
-            let calcdhash = AssetGuard._calculateHash(buf, algo)
-            return calcdhash === hash.toLowerCase()
+            let buf = fs.readFileSync(filePath);
+            let calcdhash = AssetGuard._calculateHash(buf, algo);
+            return calcdhash === hash.toLowerCase();
         }
-        return false
+        return false;
     }
 
     /**
@@ -1073,17 +1072,17 @@ class AssetGuard extends EventEmitter {
     static _validateForgeChecksum(filePath, checksums){
         if(fs.existsSync(filePath)){
             if(checksums == null || checksums.length === 0){
-                return true
+                return true;
             }
-            let buf = fs.readFileSync(filePath)
-            let calcdhash = AssetGuard._calculateHash(buf, 'sha1')
-            let valid = checksums.includes(calcdhash)
+            let buf = fs.readFileSync(filePath);
+            let calcdhash = AssetGuard._calculateHash(buf, 'sha1');
+            let valid = checksums.includes(calcdhash);
             if(!valid && filePath.endsWith('.jar')){
-                valid = AssetGuard._validateForgeJar(filePath, checksums)
+                valid = AssetGuard._validateForgeJar(filePath, checksums);
             }
-            return valid
+            return valid;
         }
-        return false
+        return false;
     }
 
     /**
@@ -1099,33 +1098,33 @@ class AssetGuard extends EventEmitter {
         // Double pass method was the quickest I found. I tried a version where we store data
         // to only require a single pass, plus some quick cleanup but that seemed to take slightly more time.
 
-        const hashes = {}
-        let expected = {}
+        const hashes = {};
+        let expected = {};
 
-        const zip = new AdmZip(buf)
-        const zipEntries = zip.getEntries()
+        const zip = new AdmZip(buf);
+        const zipEntries = zip.getEntries();
 
         //First pass
         for(let i=0; i<zipEntries.length; i++){
-            let entry = zipEntries[i]
+            let entry = zipEntries[i];
             if(entry.entryName === 'checksums.sha1'){
-                expected = AssetGuard._parseChecksumsFile(zip.readAsText(entry))
+                expected = AssetGuard._parseChecksumsFile(zip.readAsText(entry));
             }
-            hashes[entry.entryName] = AssetGuard._calculateHash(entry.getData(), 'sha1')
+            hashes[entry.entryName] = AssetGuard._calculateHash(entry.getData(), 'sha1');
         }
 
         if(!checksums.includes(hashes['checksums.sha1'])){
-            return false
+            return false;
         }
 
         //Check against expected
-        const expectedEntries = Object.keys(expected)
+        const expectedEntries = Object.keys(expected);
         for(let i=0; i<expectedEntries.length; i++){
             if(expected[expectedEntries[i]] !== hashes[expectedEntries[i]]){
-                return false
+                return false;
             }
         }
-        return true
+        return true;
     }
 
     // #endregion
@@ -1140,33 +1139,33 @@ class AssetGuard extends EventEmitter {
      * @returns {Promise.<void>} An empty promise to indicate the extraction has completed.
      */
     static _extractPackXZ(filePaths, javaExecutable){
-        loggerAG.log('[PackXZExtract] Starting')
+        loggerAG.log('[PackXZExtract] Starting');
         return new Promise((resolve, reject) => {
 
-            let libPath
+            let libPath;
             if(isDev){
-                libPath = path.join(process.cwd(), 'libraries', 'java', 'PackXZExtract.jar')
+                libPath = path.join(process.cwd(), 'libraries', 'java', 'PackXZExtract.jar');
             } else {
                 if(process.platform === 'darwin'){
-                    libPath = path.join(process.cwd(),'Contents', 'Resources', 'libraries', 'java', 'PackXZExtract.jar')
+                    libPath = path.join(process.cwd(),'Contents', 'Resources', 'libraries', 'java', 'PackXZExtract.jar');
                 } else {
-                    libPath = path.join(process.cwd(), 'resources', 'libraries', 'java', 'PackXZExtract.jar')
+                    libPath = path.join(process.cwd(), 'resources', 'libraries', 'java', 'PackXZExtract.jar');
                 }
             }
 
-            const filePath = filePaths.join(',')
-            const child = child_process.spawn(javaExecutable, ['-jar', libPath, '-packxz', filePath])
+            const filePath = filePaths.join(',');
+            const child = child_process.spawn(javaExecutable, ['-jar', libPath, '-packxz', filePath]);
             child.stdout.on('data', (data) => {
-                loggerAG.log('[PackXZExtract]', data.toString('utf8'))
-            })
+                loggerAG.log('[PackXZExtract]', data.toString('utf8'));
+            });
             child.stderr.on('data', (data) => {
-                loggerAG.log('[PackXZExtract]', data.toString('utf8'))
-            })
+                loggerAG.log('[PackXZExtract]', data.toString('utf8'));
+            });
             child.on('close', (code, signal) => {
-                loggerAG.log('[PackXZExtract]', 'Exited with code', code)
-                resolve()
-            })
-        })
+                loggerAG.log('[PackXZExtract]', 'Exited with code', code);
+                resolve();
+            });
+        });
     }
 
     /**
@@ -1182,29 +1181,29 @@ class AssetGuard extends EventEmitter {
     static _finalizeForgeAsset(asset, commonPath){
         return new Promise((resolve, reject) => {
             fs.readFile(asset.to, (err, data) => {
-                const zip = new AdmZip(data)
-                const zipEntries = zip.getEntries()
+                const zip = new AdmZip(data);
+                const zipEntries = zip.getEntries();
 
                 for(let i=0; i<zipEntries.length; i++){
                     if(zipEntries[i].entryName === 'version.json'){
-                        const forgeVersion = JSON.parse(zip.readAsText(zipEntries[i]))
-                        const versionPath = path.join(commonPath, 'versions', forgeVersion.id)
-                        const versionFile = path.join(versionPath, forgeVersion.id + '.json')
+                        const forgeVersion = JSON.parse(zip.readAsText(zipEntries[i]));
+                        const versionPath = path.join(commonPath, 'versions', forgeVersion.id);
+                        const versionFile = path.join(versionPath, forgeVersion.id + '.json');
                         if(!fs.existsSync(versionFile)){
-                            fs.ensureDirSync(versionPath)
-                            fs.writeFileSync(path.join(versionPath, forgeVersion.id + '.json'), zipEntries[i].getData())
-                            resolve(forgeVersion)
+                            fs.ensureDirSync(versionPath);
+                            fs.writeFileSync(path.join(versionPath, forgeVersion.id + '.json'), zipEntries[i].getData());
+                            resolve(forgeVersion);
                         } else {
                             //Read the saved file to allow for user modifications.
-                            resolve(JSON.parse(fs.readFileSync(versionFile, 'utf-8')))
+                            resolve(JSON.parse(fs.readFileSync(versionFile, 'utf-8')));
                         }
-                        return
+                        return;
                     }
                 }
                 //We didn't find forge's version.json.
                 reject('Unable to finalize Forge processing, version.json not found! Has forge changed their format?')
-            })
-        })
+            });
+        });
     }
 
     // #endregion
@@ -1222,23 +1221,23 @@ class AssetGuard extends EventEmitter {
      * @returns {Promise.<Object>} Promise which resolves to the version data object.
      */
     loadVersionData(version, force = false){
-        const self = this
+        const self = this;
         return new Promise(async (resolve, reject) => {
-            const versionPath = path.join(self.commonPath, 'versions', version)
-            const versionFile = path.join(versionPath, version + '.json')
+            const versionPath = path.join(self.commonPath, 'versions', version);
+            const versionFile = path.join(versionPath, version + '.json');
             if(!fs.existsSync(versionFile) || force){
-                const url = await self._getVersionDataUrl(version)
+                const url = await self._getVersionDataUrl(version);
                 //This download will never be tracked as it's essential and trivial.
-                loggerAG.log('Preparing download of ' + version + ' assets.')
-                fs.ensureDirSync(versionPath)
-                const stream = request(url).pipe(fs.createWriteStream(versionFile))
+                loggerAG.log('Preparing download of ' + version + ' assets.');
+                fs.ensureDirSync(versionPath);
+                const stream = request(url).pipe(fs.createWriteStream(versionFile));
                 stream.on('finish', () => {
-                    resolve(JSON.parse(fs.readFileSync(versionFile)))
-                })
+                    resolve(JSON.parse(fs.readFileSync(versionFile)));
+                });
             } else {
-                resolve(JSON.parse(fs.readFileSync(versionFile)))
+                resolve(JSON.parse(fs.readFileSync(versionFile)));
             }
-        })
+        });
     }
 
     /**
@@ -1253,20 +1252,20 @@ class AssetGuard extends EventEmitter {
         return new Promise((resolve, reject) => {
             request('https://launchermeta.mojang.com/mc/game/version_manifest.json', (error, resp, body) => {
                 if(error){
-                    reject(error)
+                    reject(error);
                 } else {
-                    const manifest = JSON.parse(body)
+                    const manifest = JSON.parse(body);
 
                     for(let v of manifest.versions){
                         if(v.id === version){
-                            resolve(v.url)
+                            resolve(v.url);
                         }
                     }
 
-                    resolve(null)
+                    resolve(null);
                 }
-            })
-        })
+            });
+        });
     }
 
 
@@ -1284,12 +1283,12 @@ class AssetGuard extends EventEmitter {
      * @returns {Promise.<void>} An empty promise to indicate the async processing has completed.
      */
     validateAssets(versionData, force = false){
-        const self = this
+        const self = this;
         return new Promise((resolve, reject) => {
             self._assetChainIndexData(versionData, force).then(() => {
-                resolve()
-            })
-        })
+                resolve();
+            });
+        });
     }
 
     //Chain the asset tasks to provide full async. The below functions are private.
@@ -1301,32 +1300,32 @@ class AssetGuard extends EventEmitter {
      * @returns {Promise.<void>} An empty promise to indicate the async processing has completed.
      */
     _assetChainIndexData(versionData, force = false){
-        const self = this
+        const self = this;
         return new Promise((resolve, reject) => {
             //Asset index constants.
-            const assetIndex = versionData.assetIndex
-            const name = assetIndex.id + '.json'
-            const indexPath = path.join(self.commonPath, 'assets', 'indexes')
-            const assetIndexLoc = path.join(indexPath, name)
+            const assetIndex = versionData.assetIndex;
+            const name = assetIndex.id + '.json';
+            const indexPath = path.join(self.commonPath, 'assets', 'indexes');
+            const assetIndexLoc = path.join(indexPath, name);
 
-            let data = null
+            let data = null;
             if(!fs.existsSync(assetIndexLoc) || force){
-                loggerAG.log('Downloading ' + versionData.id + ' asset index.')
-                fs.ensureDirSync(indexPath)
-                const stream = request(assetIndex.url).pipe(fs.createWriteStream(assetIndexLoc))
+                loggerAG.log('Downloading ' + versionData.id + ' asset index.');
+                fs.ensureDirSync(indexPath);
+                const stream = request(assetIndex.url).pipe(fs.createWriteStream(assetIndexLoc));
                 stream.on('finish', () => {
-                    data = JSON.parse(fs.readFileSync(assetIndexLoc, 'utf-8'))
+                    data = JSON.parse(fs.readFileSync(assetIndexLoc, 'utf-8'));
                     self._assetChainValidateAssets(versionData, data).then(() => {
-                        resolve()
-                    })
-                })
+                        resolve();
+                    });
+                });
             } else {
-                data = JSON.parse(fs.readFileSync(assetIndexLoc, 'utf-8'))
+                data = JSON.parse(fs.readFileSync(assetIndexLoc, 'utf-8'));
                 self._assetChainValidateAssets(versionData, data).then(() => {
-                    resolve()
-                })
+                    resolve();
+                });
             }
-        })
+        });
     }
 
     /**
@@ -1337,37 +1336,37 @@ class AssetGuard extends EventEmitter {
      * @returns {Promise.<void>} An empty promise to indicate the async processing has completed.
      */
     _assetChainValidateAssets(versionData, indexData){
-        const self = this
+        const self = this;
         return new Promise((resolve, reject) => {
 
             //Asset constants
-            const resourceURL = 'https://resources.download.minecraft.net/'
-            const localPath = path.join(self.commonPath, 'assets')
-            const objectPath = path.join(localPath, 'objects')
+            const resourceURL = 'https://resources.download.minecraft.net/';
+            const localPath = path.join(self.commonPath, 'assets');
+            const objectPath = path.join(localPath, 'objects');
 
-            const assetDlQueue = []
-            let dlSize = 0
-            let acc = 0
-            const total = Object.keys(indexData.objects).length
+            const assetDlQueue = [];
+            let dlSize = 0;
+            let acc = 0;
+            const total = Object.keys(indexData.objects).length;
             //const objKeys = Object.keys(data.objects)
             async.forEachOfLimit(indexData.objects, 10, (value, key, cb) => {
-                acc++
-                self.emit('progress', 'assets', acc, total)
-                const hash = value.hash
-                const assetName = path.join(hash.substring(0, 2), hash)
-                const urlName = hash.substring(0, 2) + '/' + hash
-                const ast = new Asset(key, hash, value.size, resourceURL + urlName, path.join(objectPath, assetName))
+                acc++;
+                self.emit('progress', 'assets', acc, total);
+                const hash = value.hash;
+                const assetName = path.join(hash.substring(0, 2), hash);
+                const urlName = hash.substring(0, 2) + '/' + hash;
+                const ast = new Asset(key, hash, value.size, resourceURL + urlName, path.join(objectPath, assetName));
                 if(!fs.existsSync(ast.to)){
-                    dlSize += (ast.size*1)
-                    assetDlQueue.push(ast)
-                    loggerAG.log(assetName + ' does not exist, and therefore will be downloaded!')
+                    dlSize += (ast.size*1);
+                    assetDlQueue.push(ast);
+                    loggerAG.log(assetName + ' does not exist, and therefore will be downloaded!');
                 }
-                cb()
+                cb();
             }, (err) => {
-                self.assets = new DLTracker(assetDlQueue, dlSize)
-                resolve()
-            })
-        })
+                self.assets = new DLTracker(assetDlQueue, dlSize);
+                resolve();
+            });
+        });
     }
     
     // #endregion
@@ -1385,14 +1384,14 @@ class AssetGuard extends EventEmitter {
      * @returns {Promise.<void>} An empty promise to indicate the async processing has completed.
      */
     validateLibraries(versionData){
-        const self = this
+        const self = this;
         return new Promise((resolve, reject) => {
 
-            const libArr = versionData.libraries
-            const libPath = path.join(self.commonPath, 'libraries')
+            const libArr = versionData.libraries;
+            const libPath = path.join(self.commonPath, 'libraries');
 
-            const libDlQueue = []
-            let dlSize = 0
+            const libDlQueue = [];
+            let dlSize = 0;
 
             //Check validity of each library. If the hashs don't match, download the library.
             async.eachLimit(libArr, 5, (lib, cb) => {
@@ -1400,16 +1399,16 @@ class AssetGuard extends EventEmitter {
                     let artifact = (lib.natives == null) ? lib.downloads.artifact : lib.downloads.classifiers[lib.natives[Library.mojangFriendlyOS()].replace('${arch}', process.arch.replace('x', ''))]
                     const libItm = new Library(lib.name, artifact.sha1, artifact.size, artifact.url, path.join(libPath, artifact.path))
                     if(!AssetGuard._validateLocal(libItm.to, 'sha1', libItm.hash)){
-                        dlSize += (libItm.size*1)
-                        libDlQueue.push(libItm)
+                        dlSize += (libItm.size*1);
+                        libDlQueue.push(libItm);
                     }
                 }
-                cb()
+                cb();
             }, (err) => {
-                self.libraries = new DLTracker(libDlQueue, dlSize)
-                resolve()
-            })
-        })
+                self.libraries = new DLTracker(libDlQueue, dlSize);
+                resolve();
+            });
+        });
     }
 
     // #endregion
@@ -1425,12 +1424,12 @@ class AssetGuard extends EventEmitter {
      * @returns {Promise.<void>} An empty promise to indicate the async processing has completed.
      */
     validateMiscellaneous(versionData){
-        const self = this
+        const self = this;
         return new Promise(async (resolve, reject) => {
-            await self.validateClient(versionData)
-            await self.validateLogConfig(versionData)
-            resolve()
-        })
+            await self.validateClient(versionData);
+            await self.validateLogConfig(versionData);
+            resolve();
+        });
     }
 
     /**
@@ -1441,23 +1440,23 @@ class AssetGuard extends EventEmitter {
      * @returns {Promise.<void>} An empty promise to indicate the async processing has completed.
      */
     validateClient(versionData, force = false){
-        const self = this
+        const self = this;
         return new Promise((resolve, reject) => {
-            const clientData = versionData.downloads.client
-            const version = versionData.id
-            const targetPath = path.join(self.commonPath, 'versions', version)
-            const targetFile = version + '.jar'
+            const clientData = versionData.downloads.client;
+            const version = versionData.id;
+            const targetPath = path.join(self.commonPath, 'versions', version);
+            const targetFile = version + '.jar';
 
-            let client = new Asset(version + ' client', clientData.sha1, clientData.size, clientData.url, path.join(targetPath, targetFile))
+            let client = new Asset(version + ' client', clientData.sha1, clientData.size, clientData.url, path.join(targetPath, targetFile));
 
             if(!AssetGuard._validateLocal(client.to, 'sha1', client.hash) || force){
-                self.files.dlqueue.push(client)
-                self.files.dlsize += client.size*1
-                resolve()
+                self.files.dlqueue.push(client);
+                self.files.dlsize += client.size*1;
+                resolve();
             } else {
-                resolve()
+                resolve();
             }
-        })
+        });
     }
 
     /**
@@ -1468,22 +1467,22 @@ class AssetGuard extends EventEmitter {
      * @returns {Promise.<void>} An empty promise to indicate the async processing has completed.
      */
     validateLogConfig(versionData){
-        const self = this
+        const self = this;
         return new Promise((resolve, reject) => {
-            const client = versionData.logging.client
-            const file = client.file
-            const targetPath = path.join(self.commonPath, 'assets', 'log_configs')
+            const client = versionData.logging.client;
+            const file = client.file;
+            const targetPath = path.join(self.commonPath, 'assets', 'log_configs');
 
-            let logConfig = new Asset(file.id, file.sha1, file.size, file.url, path.join(targetPath, file.id))
+            let logConfig = new Asset(file.id, file.sha1, file.size, file.url, path.join(targetPath, file.id));
 
             if(!AssetGuard._validateLocal(logConfig.to, 'sha1', logConfig.hash)){
-                self.files.dlqueue.push(logConfig)
-                self.files.dlsize += logConfig.size*1
-                resolve()
+                self.files.dlqueue.push(logConfig);
+                self.files.dlsize += logConfig.size*1;
+                resolve();
             } else {
-                resolve()
+                resolve();
             }
-        })
+        });
     }
 
     // #endregion
@@ -1498,35 +1497,35 @@ class AssetGuard extends EventEmitter {
      * @returns {Promise.<Object>} A promise which resolves to the server distribution object.
      */
     validateDistribution(server){
-        const self = this
+        const self = this;
         return new Promise((resolve, reject) => {
-            self.forge = self._parseDistroModules(server.getModules(), server.getMinecraftVersion(), server.getID())
-            resolve(server)
-        })
+            self.forge = self._parseDistroModules(server.getModules(), server.getMinecraftVersion(), server.getID());
+            resolve(server);
+        });
     }
 
     _parseDistroModules(modules, version, servid){
-        let alist = []
-        let asize = 0
+        let alist = [];
+        let asize = 0;
         for(let ob of modules){
-            let obArtifact = ob.getArtifact()
-            let obPath = obArtifact.getPath()
-            let artifact = new DistroModule(ob.getIdentifier(), obArtifact.getHash(), obArtifact.getSize(), obArtifact.getURL(), obPath, ob.getType())
-            const validationPath = obPath.toLowerCase().endsWith('.pack.xz') ? obPath.substring(0, obPath.toLowerCase().lastIndexOf('.pack.xz')) : obPath
+            let obArtifact = ob.getArtifact();
+            let obPath = obArtifact.getPath();
+            let artifact = new DistroModule(ob.getIdentifier(), obArtifact.getHash(), obArtifact.getSize(), obArtifact.getURL(), obPath, ob.getType());
+            const validationPath = obPath.toLowerCase().endsWith('.pack.xz') ? obPath.substring(0, obPath.toLowerCase().lastIndexOf('.pack.xz')) : obPath;
             if(!AssetGuard._validateLocal(validationPath, 'MD5', artifact.hash)){
-                asize += artifact.size*1
-                alist.push(artifact)
-                if(validationPath !== obPath) this.extractQueue.push(obPath)
+                asize += artifact.size*1;
+                alist.push(artifact);
+                if(validationPath !== obPath) this.extractQueue.push(obPath);
             }
             //Recursively process the submodules then combine the results.
             if(ob.getSubModules() != null){
-                let dltrack = this._parseDistroModules(ob.getSubModules(), version, servid)
-                asize += dltrack.dlsize*1
-                alist = alist.concat(dltrack.dlqueue)
+                let dltrack = this._parseDistroModules(ob.getSubModules(), version, servid);
+                asize += dltrack.dlsize*1;
+                alist = alist.concat(dltrack.dlqueue);
             }
         }
 
-        return new DLTracker(alist, asize)
+        return new DLTracker(alist, asize);
     }
 
     /**
@@ -1536,38 +1535,38 @@ class AssetGuard extends EventEmitter {
      * @returns {Promise.<Object>} A promise which resolves to Forge's version.json data.
      */
     loadForgeData(server){
-        const self = this
+        const self = this;
         return new Promise(async (resolve, reject) => {
-            const modules = server.getModules()
+            const modules = server.getModules();
             for(let ob of modules){
-                const type = ob.getType()
+                const type = ob.getType();
                 if(type === DistroManager.Types.ForgeHosted || type === DistroManager.Types.Forge){
                     if(Util.isForgeGradle3(server.getMinecraftVersion(), ob.getVersion())){
                         // Read Manifest
                         for(let sub of ob.getSubModules()){
                             if(sub.getType() === DistroManager.Types.VersionManifest){
-                                resolve(JSON.parse(fs.readFileSync(sub.getArtifact().getPath(), 'utf-8')))
-                                return
+                                resolve(JSON.parse(fs.readFileSync(sub.getArtifact().getPath(), 'utf-8')));
+                                return;
                             }
                         }
-                        reject('No forge version manifest found!')
-                        return
+                        reject('No forge version manifest found!');
+                        return;
                     } else {
-                        let obArtifact = ob.getArtifact()
-                        let obPath = obArtifact.getPath()
-                        let asset = new DistroModule(ob.getIdentifier(), obArtifact.getHash(), obArtifact.getSize(), obArtifact.getURL(), obPath, type)
+                        let obArtifact = ob.getArtifact();
+                        let obPath = obArtifact.getPath();
+                        let asset = new DistroModule(ob.getIdentifier(), obArtifact.getHash(), obArtifact.getSize(), obArtifact.getURL(), obPath, type);
                         try {
-                            let forgeData = await AssetGuard._finalizeForgeAsset(asset, self.commonPath)
-                            resolve(forgeData)
+                            let forgeData = await AssetGuard._finalizeForgeAsset(asset, self.commonPath);
+                            resolve(forgeData);
                         } catch (err){
-                            reject(err)
+                            reject(err);
                         }
-                        return
+                        return;
                     }
                 }
             }
-            reject('No forge module found!')
-        })
+            reject('No forge module found!');
+        });
     }
 
     _parseForgeLibraries(){
@@ -1588,31 +1587,31 @@ class AssetGuard extends EventEmitter {
             JavaGuard._latestOpenJDK('8').then(verData => {
                 if(verData != null){
 
-                    dataDir = path.join(dataDir, 'runtime', 'x64')
-                    const fDir = path.join(dataDir, verData.name)
-                    const jre = new Asset(verData.name, null, verData.size, verData.uri, fDir)
+                    dataDir = path.join(dataDir, 'runtime', 'x64');
+                    const fDir = path.join(dataDir, verData.name);
+                    const jre = new Asset(verData.name, null, verData.size, verData.uri, fDir);
                     this.java = new DLTracker([jre], jre.size, (a, self) => {
                         if(verData.name.endsWith('zip')){
 
-                            const zip = new AdmZip(a.to)
-                            const pos = path.join(dataDir, zip.getEntries()[0].entryName)
+                            const zip = new AdmZip(a.to);
+                            const pos = path.join(dataDir, zip.getEntries()[0].entryName);
                             zip.extractAllToAsync(dataDir, true, (err) => {
                                 if(err){
-                                    loggerAG.log(err)
-                                    self.emit('complete', 'java', JavaGuard.javaExecFromRoot(pos))
+                                    loggerAG.log(err);
+                                    self.emit('complete', 'java', JavaGuard.javaExecFromRoot(pos));
                                 } else {
                                     fs.unlink(a.to, err => {
                                         if(err){
-                                            loggerAG.log(err)
+                                            loggerAG.log(err);
                                         }
-                                        self.emit('complete', 'java', JavaGuard.javaExecFromRoot(pos))
-                                    })
+                                        self.emit('complete', 'java', JavaGuard.javaExecFromRoot(pos));
+                                    });
                                 }
-                            })
+                            });
 
                         } else {
                             // Tar.gz
-                            let h = null
+                            let h = null;
                             fs.createReadStream(a.to)
                                 .on('error', err => loggerAG.log(err))
                                 .pipe(zlib.createGunzip())
@@ -1620,7 +1619,7 @@ class AssetGuard extends EventEmitter {
                                 .pipe(tar.extract(dataDir, {
                                     map: (header) => {
                                         if(h == null){
-                                            h = header.name
+                                            h = header.name;
                                         }
                                     }
                                 }))
@@ -1628,24 +1627,24 @@ class AssetGuard extends EventEmitter {
                                 .on('finish', () => {
                                     fs.unlink(a.to, err => {
                                         if(err){
-                                            loggerAG.log(err)
+                                            loggerAG.log(err);
                                         }
                                         if(h.indexOf('/') > -1){
-                                            h = h.substring(0, h.indexOf('/'))
+                                            h = h.substring(0, h.indexOf('/'));
                                         }
-                                        const pos = path.join(dataDir, h)
-                                        self.emit('complete', 'java', JavaGuard.javaExecFromRoot(pos))
-                                    })
-                                })
+                                        const pos = path.join(dataDir, h);
+                                        self.emit('complete', 'java', JavaGuard.javaExecFromRoot(pos));
+                                    });
+                                });
                         }
-                    })
-                    resolve(true)
+                    });
+                    resolve(true);
 
                 } else {
-                    resolve(false)
+                    resolve(false);
                 }
-            })
-        })
+            });
+        });
 
     }
 
@@ -1765,25 +1764,25 @@ class AssetGuard extends EventEmitter {
      */
     startAsyncProcess(identifier, limit = 5){
 
-        const self = this
-        const dlTracker = this[identifier]
-        const dlQueue = dlTracker.dlqueue
+        const self = this;
+        const dlTracker = this[identifier];
+        const dlQueue = dlTracker.dlqueue;
 
         if(dlQueue.length > 0){
-            loggerAG.log('DLQueue', dlQueue)
+            loggerAG.log('DLQueue', dlQueue);
 
             async.eachLimit(dlQueue, limit, (asset, cb) => {
 
-                fs.ensureDirSync(path.join(asset.to, '..'))
+                fs.ensureDirSync(path.join(asset.to, '..'));
 
-                let req = request(asset.from)
-                req.pause()
+                let req = request(asset.from);
+                req.pause();
 
                 req.on('response', (resp) => {
 
                     if(resp.statusCode === 200){
 
-                        let doHashCheck = false
+                        let doHashCheck = false;
                         /*const contentLength = parseInt(resp.headers['content-length'])
 
                         if(contentLength !== asset.size){
@@ -1795,78 +1794,78 @@ class AssetGuard extends EventEmitter {
                             this.totaldlsize += contentLength
                         }
 */
-                        let writeStream = fs.createWriteStream(asset.to)
+                        let writeStream = fs.createWriteStream(asset.to);
                         writeStream.on('close', () => {
                             if(dlTracker.callback != null){
-                                dlTracker.callback.apply(dlTracker, [asset, self])
+                                dlTracker.callback.apply(dlTracker, [asset, self]);
                             }
 
                             if(doHashCheck){
-                                const v = AssetGuard._validateLocal(asset.to, asset.type != null ? 'md5' : 'sha1', asset.hash)
+                                const v = AssetGuard._validateLocal(asset.to, asset.type != null ? 'md5' : 'sha1', asset.hash);
                                 if(v){
-                                    loggerAG.log(`Hashes match for ${asset.id}, byte mismatch is an issue in the distro index.`)
+                                    loggerAG.log(`Hashes match for ${asset.id}, byte mismatch is an issue in the distro index.`);
                                 } else {
-                                    loggerAG.error(`Hashes do not match, ${asset.id} may be corrupted.`)
+                                    loggerAG.error(`Hashes do not match, ${asset.id} may be corrupted.`);
                                 }
                             }
 
-                            cb()
-                        })
-                        req.pipe(writeStream)
-                        req.resume()
+                            cb();
+                        });
+                        req.pipe(writeStream);
+                        req.resume();
 
                     } else {
 
-                        req.abort()
-                        loggerAG.log(`Failed to download ${asset.id}(${typeof asset.from === 'object' ? asset.from.url : asset.from}). Response code ${resp.statusCode}`)
-                        self.progress += asset.size*1
-                        self.emit('progress', 'download', self.progress, self.totaldlsize)
-                        cb()
+                        req.abort();
+                        loggerAG.log(`Failed to download ${asset.id}(${typeof asset.from === 'object' ? asset.from.url : asset.from}). Response code ${resp.statusCode}`);
+                        self.progress += asset.size*1;
+                        self.emit('progress', 'download', self.progress, self.totaldlsize);
+                        cb();
 
                     }
 
-                })
+                });
 
                 req.on('error', (err) => {
-                    self.emit('error', 'download', err)
-                })
+                    self.emit('error', 'download', err);
+                });
 
                 req.on('data', (chunk) => {
-                    self.progress += chunk.length
-                    self.emit('progress', 'download', self.progress, self.totaldlsize)
-                })
+                    self.progress += chunk.length;
+                    self.emit('progress', 'download', self.progress, self.totaldlsize);
+                });
 
             }, (err) => {
 
                 if(err){
-                    loggerAG.log('An item in ' + identifier + ' failed to process')
+                    loggerAG.log('An item in ' + identifier + ' failed to process');
                 } else {
-                    loggerAG.log('All ' + identifier + ' have been processed successfully')
+                    loggerAG.log('All ' + identifier + ' have been processed successfully');
                 }
 
                 //self.totaldlsize -= dlTracker.dlsize
                 //self.progress -= dlTracker.dlsize
-                self[identifier] = new DLTracker([], 0)
+                self[identifier] = new DLTracker([], 0);
 
                 if(self.progress >= self.totaldlsize) {
                     if(self.extractQueue.length > 0){
-                        self.emit('progress', 'extract', 1, 1)
+                        self.emit('progress', 'extract', 1, 1);
                         //self.emit('extracting')
                         AssetGuard._extractPackXZ(self.extractQueue, self.javaexec).then(() => {
-                            self.extractQueue = []
-                            self.emit('complete', 'download')
-                        })
+                            self.extractQueue = [];
+                            self.emit('complete', 'download');
+                        });
                     } else {
-                        self.emit('complete', 'download')
+                        self.emit('complete', 'download');
                     }
                 }
 
-            })
+            });
 
-            return true
+            return true;
 
         } else {
-            return false
+            return false;
         }
     }
 
@@ -1882,27 +1881,27 @@ class AssetGuard extends EventEmitter {
      */
     processDlQueues(identifiers = [{id:'assets', limit:20}, {id:'libraries', limit:5}, {id:'files', limit:5}, {id:'forge', limit:5}]){
         return new Promise((resolve, reject) => {
-            let shouldFire = true
+            let shouldFire = true;
 
             // Assign dltracking variables.
-            this.totaldlsize = 0
-            this.progress = 0
+            this.totaldlsize = 0;
+            this.progress = 0;
 
             for(let iden of identifiers){
-                this.totaldlsize += this[iden.id].dlsize
+                this.totaldlsize += this[iden.id].dlsize;
             }
 
             this.once('complete', (data) => {
-                resolve()
-            })
+                resolve();
+            });
 
             for(let iden of identifiers){
-                let r = this.startAsyncProcess(iden.id, iden.limit)
-                if(r) shouldFire = false
+                let r = this.startAsyncProcess(iden.id, iden.limit);
+                if(r) shouldFire = false;
             }
 
             if(shouldFire){
-                this.emit('complete', 'download')
+                this.emit('complete', 'download');
             }
         })
     }
@@ -1911,40 +1910,40 @@ class AssetGuard extends EventEmitter {
 
         try {
             if(!ConfigManager.isLoaded()){
-                ConfigManager.load()
+                ConfigManager.load();
             }
-            DistroManager.setDevMode(dev)
-            const dI = await DistroManager.pullLocal()
+            DistroManager.setDevMode(dev);
+            const dI = await DistroManager.pullLocal();
     
-            const server = dI.getServer(serverid)
+            const server = dI.getServer(serverid);
     
             // Validate Everything
     
-            await this.validateDistribution(server)
-            this.emit('validate', 'distribution')
-            const versionData = await this.loadVersionData(server.getMinecraftVersion())
-            this.emit('validate', 'version')
-            await this.validateAssets(versionData)
-            this.emit('validate', 'assets')
-            await this.validateLibraries(versionData)
-            this.emit('validate', 'libraries')
-            await this.validateMiscellaneous(versionData)
-            this.emit('validate', 'files')
-            await this.processDlQueues()
+            await this.validateDistribution(server);
+            this.emit('validate', 'distribution');
+            const versionData = await this.loadVersionData(server.getMinecraftVersion());
+            this.emit('validate', 'version');
+            await this.validateAssets(versionData);
+            this.emit('validate', 'assets');
+            await this.validateLibraries(versionData);
+            this.emit('validate', 'libraries');
+            await this.validateMiscellaneous(versionData);
+            this.emit('validate', 'files');
+            await this.processDlQueues();
             //this.emit('complete', 'download')
-            const forgeData = await this.loadForgeData(server)
+            const forgeData = await this.loadForgeData(server);
         
             return {
                 versionData,
                 forgeData
-            }
+            };
 
         } catch (err){
             return {
                 versionData: null,
                 forgeData: null,
                 error: err
-            }
+            };
         }
         
 
@@ -1960,4 +1959,4 @@ module.exports = {
     JavaGuard,
     Asset,
     Library
-}
+};
