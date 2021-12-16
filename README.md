@@ -6,7 +6,7 @@
 
 <!-- [<p align="center"><img src="https://img.shields.io/travis/dscalzi/HeliosLauncher.svg?style=for-the-badge" alt="travis">](https://travis-ci.org/dscalzi/HeliosLauncher) [<img src="https://img.shields.io/github/downloads/dscalzi/HeliosLauncher/total.svg?style=for-the-badge" alt="downloads">](https://github.com/dscalzi/HeliosLauncher/releases) <img src="https://forthebadge.com/images/badges/winter-is-coming.svg"  height="28px" alt="stark"></p> -->
 
-<p align="center">Join AdlC servers easily and keep up to date with our packs and fixes!</p>
+[![CodeFactor](https://www.codefactor.io/repository/github/adlc-network/ingrid/badge)](https://www.codefactor.io/repository/github/adlc-network/ingrid)
 
 ## Downloads
 
