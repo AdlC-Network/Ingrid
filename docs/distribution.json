@@ -1,0 +1,105 @@
+{
+    "version": "1.0.0",
+    "discord": {
+        "clientId": "896764552941830214",
+        "smallImageText": "AdlC",
+        "smallImageKey": "seal-circle"
+    },
+    "java": {
+        "zulu": "https://www.azul.com/downloads/?version=java-17-lts&architecture=x86-64-bit&package=jre"
+    },
+    "rss": "https://adlc.network/forums/-/index.rss",
+    "servers": [
+        {
+            "id": "fr.adlc.sd1.n1",
+            "name": "AdlC | Clasique",
+            "description": "Instance clasique avec les mods de base.",
+            "icon": "https://adlc.network/data/assets/logo/logo_AdlC_2086x.png",
+            "version": "1",
+            "address": "mc.adlc.network",
+            "minecraftVersion": "1.17.1",
+            "discord": {
+                "shortId": "logo-512x512",
+                "largeImageText": "Instance clasique",
+                "largeImageKey": "lamp"
+            },
+            "mainServer": true,
+            "serverCode": "",
+            "autoconnect": true,
+            "modules": [
+                {
+                    "id": "net.fabricmc:fabric-loader:0.12.12@jar",
+                    "name": "Minecraft fabric",
+                    "type": "ForgeHosted",
+                    "artifact": {
+                        "size": 722025,
+                        "MD5": "0c36ea6a1b64966ed00413f208e68188",
+                        "url": "https://adlc.network/app/ingrid/repo/fabric-loader-0.12.12.jar"
+                    },
+                    "subModules": [
+                        {
+                            "id": "net.fabricmc:fabric-api:0.9.0.334@jar",
+                            "name": "Fabric API",
+                            "type": "Library",
+                            "artifact": {
+                                "size": 2111,
+                                "MD5": "cf3428c2bea39f81cca7ff7458ddcdd5",
+                                "url": "https://maven.fabricmc.net/net/fabricmc/fabric-api/fabric-api/0.9.0%2Bbuild.334-1.16/fabric-api-0.9.0%2Bbuild.334-1.16.jar"
+                            }
+                        },
+                        {
+                            "id": "net.fabricmc:intermediary:1.17.1@jar",
+                            "name": "Intermediary Mappings",
+                            "type": "Library",
+                            "artifact": {
+                                "size": 410406,
+                                "MD5": "bd096fa0d9022a2755f76714b3db543d",
+                                "url": "https://maven.fabricmc.net/net/fabricmc/intermediary/1.17.1-rc2/intermediary-1.17.1-rc2-v2.jar"
+                            }
+                        },
+                        {
+                            "id": "org.lwjgl:lwjgl:3.2.2@jar",
+                            "name": "LWJGL 3",
+                            "type": "Library",
+                            "artifact": {
+                                "size": 321900,
+                                "MD5": "cf3428c2bea39f81cca7ff7458ddcdd5",
+                                "url": "https://adlc.network/app/ingrid/repo/lwjgl-3.2.2.jar"
+                            }
+                        }
+                    ]
+                },
+                {
+                    "id": "me.jellysquid.mods:sodium:0.3.3+build.8",
+                    "name": "Sodium",
+                    "type": "ForgeMod",
+                    "artifact": {
+                        "size": 1285700,
+                         "MD5": "4a7e598dc9b87f445a22ccea7ff891f4",
+                        "url": "https://adlc.network/app/ingrid/repo/sodium-fabric-mc1.17.1-0.3.3+build.8.jar"
+                    }
+                },
+                {
+                    "id": "me.flashyreese.mods:sodiumextra:0.3.6",
+                    "name": "Sodium Extra",
+                    "type": "ForgeMod",
+                    "artifact": {
+                        "size": 88503,
+                        "MD5": "289e6b10ff68304c591409474765f027",
+                        "url": "https://adlc.network/app/ingrid/repo/sodium-extra-mc1.17.1-0.3.6.jar"
+                    }
+                },
+                {
+                    "id": "net.coderbot:iris:1.1.3",
+                    "name": "Iris Shaders",
+                    "type": "ForgeMod",
+                    "artifact": {
+                        "size": 1625729,
+                        "MD5": "7be778f0414df6754f7e95228b4242cc",
+                        "url": "https://adlc.network/app/ingrid/repo/iris-mc1.17-1.1.3.jar"
+                    }
+                }
+            ]
+        }
+    ]
+}
