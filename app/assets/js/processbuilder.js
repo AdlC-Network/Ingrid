@@ -1,4 +1,4 @@
-const {app} = require('electron')
+//* const {app} = require('electron')
 const AdmZip                = require('adm-zip')
 const child_process         = require('child_process')
 const crypto                = require('crypto')

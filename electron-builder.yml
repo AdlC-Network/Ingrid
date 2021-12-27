@@ -1,6 +1,6 @@
 appId: 'adlclauncher'
-productName: 'Ingrid Launcher'
-artifactName: '${productName}-setup-${version}.${ext}'
+productName: 'Ingrid'
+artifactName: '${productName}-installer-${version}.${ext}'
 
 copyright: 'Copyright © 2021 Augure de la Chouette'
 
