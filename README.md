@@ -8,6 +8,10 @@
 
 [![CodeFactor](https://www.codefactor.io/repository/github/adlc-network/ingrid/badge)](https://www.codefactor.io/repository/github/adlc-network/ingrid)
 
+<a href="https://github.com/AdlC-Network/Ingrid">
+  <img align="center" src="https://github-readme-stats.vercel.app/api/pin/?username=AdlC-Network&repo=Ingrid&theme=gruvbox" />
+</a>
+
 ## Downloads
 
 You can download from [GitHub Releases](https://github.com/AdlC-Network/Ingrid/releases)
