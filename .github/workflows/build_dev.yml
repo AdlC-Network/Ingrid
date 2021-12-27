@@ -1,9 +1,9 @@
-name: Build/master
+name: Build/dev
 
 on:
   push:
     branches:
-      - "master"
+      - "dev"
 
 jobs:
   release:
@@ -22,11 +22,17 @@ jobs:
         with:
           node-version: 14
 
-      - name: Build/master Electron app
+      - name: Build/dev Electron app
         uses: samuelmeuli/action-electron-builder@v1
         with:
           github_token: ${{ secrets.github_token }}
           draft: true
-          release_name: ${{ github.ref }}
+          prerelease: true
+          
+          title: "Dev Build - ${{ github.ref }}"
 
+          body: |
+            **Attention !**
+            - Ceci est une version "dev"
+            - Cette version n'est pas stable.
           release: always
