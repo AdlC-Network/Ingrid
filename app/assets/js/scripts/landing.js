@@ -1195,7 +1195,7 @@ function initNews(){
 
                 const lN = newsArr[0]
                 const cached = ConfigManager.getNewsCache()
-                let newHash = crypto.createHash('sha1').update(lN.content).digest('hex')
+                let newHash = crypto.createHash('sha512').update(lN.content).digest('hex')
                 let newDate = new Date(lN.date)
                 let isNew = false
 
