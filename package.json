@@ -1,10 +1,10 @@
 {
   "name": "adlclauncher",
-  "version": "v0.0.1-beta-2",
+  "version": "0.0.1-beta-3",
   "productName": "AdlC Launcher",
   "description": "Modded Minecraft Launcher",
   "author": "AdlC",
-  "license": "UNLICENSED",
+  "license": "MIT",
   "homepage": "https://github.com/AdlC-Network/Ingrid",
   "bugs": {
     "url": "https://github.com/AdlC-Network/Ingrid/issues"
