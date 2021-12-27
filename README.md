@@ -9,8 +9,10 @@
 
 <img align="center" src="https://github.com/AdlC-Network/Ingrid/actions/workflows/codacy-analysis.yml/badge.svg?branch=master" /> <img align="center" src="https://github.com/AdlC-Network/Ingrid/actions/workflows/build.yml/badge.svg" />
 
+![GitHub repo size](https://img.shields.io/github/repo-size/AdlC-Network/Ingrid?style=plastic) ![GitHub language count](https://img.shields.io/github/languages/count/AdlC-Network/Ingrid?style=plastic) ![GitHub top language](https://img.shields.io/github/languages/top/AdlC-Network/Ingrid?style=plastic) ![GitHub last commit](https://img.shields.io/github/last-commit/AdlC-Network/Ingrid?color=red&style=plastic) [![Known Vulnerabilities](https://snyk.io/test/github/AdlC-Network/Ingrid/badge.svg)](https://snyk.io/test/github/AdlC-Network/Ingrid)
 
-![Stats](https://github-readme-stats.vercel.app/api?username=AvnyrTokirawa&show_icons=true) ![GitHub repo size](https://img.shields.io/github/repo-size/AdlC-Network/Ingrid?style=plastic) ![GitHub language count](https://img.shields.io/github/languages/count/AdlC-Network/Ingrid?style=plastic) ![GitHub top language](https://img.shields.io/github/languages/top/AdlC-Network/Ingrid?style=plastic) ![GitHub last commit](https://img.shields.io/github/last-commit/AdlC-Network/Ingrid?color=red&style=plastic) [![Known Vulnerabilities](https://snyk.io/test/github/AdlC-Network/Ingrid/badge.svg)](https://snyk.io/test/github/AdlC-Network/Ingrid)
+
+![Stats](https://github-readme-stats.vercel.app/api?username=AvnyrTokirawa&show_icons=true)
 
 <span class="badge-buymeacoffee">
 <a href="https://ko-fi.com/avnyr" title="Donate to this author using Buy Me A Coffee"><img src="https://img.shields.io/badge/buy%20me%20a%20coffee-donate-yellow.svg" alt="Buy Me A Coffee donate button" /></a>
