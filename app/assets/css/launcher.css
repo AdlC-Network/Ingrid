@@ -2996,9 +2996,9 @@ input:checked + .toggleSwitchSlider:before {
     cursor: pointer;
     visibility: hidden;
     opacity: 0;
-    width: 100px;
-    background-color: rgb(0, 0, 0);
-    color: #fff;
+    width: 30em;
+    background-color: rgba(148, 146, 48, 0.404);
+    color: rgb(16, 197, 31);
     text-align: center;
     border-radius: 10px;
     padding: 2px;
@@ -4298,4 +4298,10 @@ input:checked + .toggleSwitchSlider:before {
     100% {
         transform:rotate(360deg)
     }
+}
+
+div.center.middle {
+    vertical-align: middle;
+    margin: auto;
+    justify-content: center;
 }
