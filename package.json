@@ -1,11 +1,11 @@
 {
   "name": "adlclauncher",
-  "version": "0.0.1-dev",
+  "version": "0.0.1-alpha-1",
   "productName": "AdlC Launcher",
   "description": "Modded Minecraft Launcher",
   "author": "AdlC",
   "license": "UNLICENSED",
-  "homepage": "https://github.com/ModRealms-Network/HeliosLauncher",
+  "homepage": "https://github.com/AdlC-Network/Ingrid",
   "bugs": {
     "url": "https://github.com/AdlC-Network/Ingrid/issues"
   },
