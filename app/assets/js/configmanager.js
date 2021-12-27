@@ -202,23 +202,23 @@ exports.load = function(){
             logger.log('Configuration file contains malformed JSON or is corrupt.')
             logger.log('Generating a new configuration file.')
             fs.ensureDirSync(path.join(configPath, '..'))
-            config = DEFAULT_CONFIG
-            exports.save()
+            config = DEFAULT_CONFIG;
+            exports.save();
         }
         if(doValidate){
-            config = validateKeySet(DEFAULT_CONFIG, config)
-            exports.save()
+            config = validateKeySet(DEFAULT_CONFIG, config);
+            exports.save();
         }
     }
-    logger.log('Successfully Loaded')
-}
+    logger.log('Successfully Loaded');
+};
 
 /**
  * @returns {boolean} Whether or not the manager has been loaded.
  */
 exports.isLoaded = function(){
-    return config != null
-}
+    return config != null;
+};
 
 /**
  * Validate that the destination object has at least every field
@@ -230,18 +230,18 @@ exports.isLoaded = function(){
  */
 function validateKeySet(srcObj, destObj){
     if(srcObj == null){
-        srcObj = {}
+        srcObj = {};
     }
-    const validationBlacklist = ['authenticationDatabase']
-    const keys = Object.keys(srcObj)
+    const validationBlacklist = ['authenticationDatabase'];
+    const keys = Object.keys(srcObj);
     for(let i=0; i<keys.length; i++){
         if(typeof destObj[keys[i]] === 'undefined'){
-            destObj[keys[i]] = srcObj[keys[i]]
+            destObj[keys[i]] = srcObj[keys[i]];
         } else if(typeof srcObj[keys[i]] === 'object' && srcObj[keys[i]] != null && !(srcObj[keys[i]] instanceof Array) && validationBlacklist.indexOf(keys[i]) === -1){
-            destObj[keys[i]] = validateKeySet(srcObj[keys[i]], destObj[keys[i]])
+            destObj[keys[i]] = validateKeySet(srcObj[keys[i]], destObj[keys[i]]);
         }
     }
-    return destObj
+    return destObj;
 }
 
 /**
@@ -251,8 +251,8 @@ function validateKeySet(srcObj, destObj){
  * @returns {boolean} True if this is the first launch, otherwise false.
  */
 exports.isFirstLaunch = function(){
-    return firstLaunch
-}
+    return firstLaunch;
+};
 
 /**
  * Returns the name of the folder in the OS temp directory which we
@@ -261,8 +261,8 @@ exports.isFirstLaunch = function(){
  * @returns {string} The name of the folder.
  */
 exports.getTempNativeFolder = function(){
-    return 'WCNatives'
-}
+    return 'WCNatives';
+};
 
 // System Settings (Unconfigurable on UI)
 
@@ -273,8 +273,8 @@ exports.getTempNativeFolder = function(){
  * @returns {Object} The news cache object.
  */
 exports.getNewsCache = function(){
-    return config.newsCache
-}
+    return config.newsCache;
+};
 
 /**
  * Set the new news cache object.
@@ -282,8 +282,8 @@ exports.getNewsCache = function(){
  * @param {Object} newsCache The new news cache object.
  */
 exports.setNewsCache = function(newsCache){
-    config.newsCache = newsCache
-}
+    config.newsCache = newsCache;
+};
 
 /**
  * Set whether or not the news has been dismissed (checked)
@@ -291,8 +291,8 @@ exports.setNewsCache = function(newsCache){
  * @param {boolean} dismissed Whether or not the news has been dismissed (checked).
  */
 exports.setNewsCacheDismissed = function(dismissed){
-    config.newsCache.dismissed = dismissed
-}
+    config.newsCache.dismissed = dismissed;
+};
 
 /**
  * Retrieve the common directory for shared
@@ -301,8 +301,8 @@ exports.setNewsCacheDismissed = function(dismissed){
  * @returns {string} The launcher's common directory.
  */
 exports.getCommonDirectory = function(){
-    return path.join(exports.getDataDirectory(), 'common')
-}
+    return path.join(exports.getDataDirectory(), 'common');
+};
 
 /**
  * Retrieve the instance directory for the per
@@ -311,8 +311,8 @@ exports.getCommonDirectory = function(){
  * @returns {string} The launcher's instance directory.
  */
 exports.getInstanceDirectory = function(){
-    return path.join(exports.getDataDirectory(), 'instances')
-}
+    return path.join(exports.getDataDirectory(), 'instances');
+};
 
 /**
  * Retrieve the launcher's Client Token.
@@ -321,8 +321,8 @@ exports.getInstanceDirectory = function(){
  * @returns {string} The launcher's Client Token.
  */
 exports.getClientToken = function(){
-    return config.clientToken
-}
+    return config.clientToken;
+};
 
 /**
  * Set the launcher's Client Token.
@@ -330,8 +330,8 @@ exports.getClientToken = function(){
  * @param {string} clientToken The launcher's new Client Token.
  */
 exports.setClientToken = function(clientToken){
-    config.clientToken = clientToken
-}
+    config.clientToken = clientToken;
+};
 
 /**
  * Retrieve the ID of the selected serverpack.
@@ -340,8 +340,8 @@ exports.setClientToken = function(clientToken){
  * @returns {string} The ID of the selected serverpack.
  */
 exports.getSelectedServer = function(def = false){
-    return !def ? config.selectedServer : DEFAULT_CONFIG.clientToken
-}
+    return !def ? config.selectedServer : DEFAULT_CONFIG.clientToken;
+};
 
 /**
  * Set the ID of the selected serverpack.
@@ -349,8 +349,8 @@ exports.getSelectedServer = function(def = false){
  * @param {string} serverID The ID of the new selected serverpack.
  */
 exports.setSelectedServer = function(serverID){
-    config.selectedServer = serverID
-}
+    config.selectedServer = serverID;
+};
 
 /**
  * Get an array of each account currently authenticated by the launcher.
@@ -358,8 +358,8 @@ exports.setSelectedServer = function(serverID){
  * @returns {Array.<Object>} An array of each stored authenticated account.
  */
 exports.getAuthAccounts = function(){
-    return config.authenticationDatabase
-}
+    return config.authenticationDatabase;
+};
 
 /**
  * Returns the authenticated account with the given uuid. Value may
@@ -369,8 +369,8 @@ exports.getAuthAccounts = function(){
  * @returns {Object} The authenticated account with the given uuid.
  */
 exports.getAuthAccount = function(uuid){
-    return config.authenticationDatabase[uuid]
-}
+    return config.authenticationDatabase[uuid];
+};
 
 /**
  * Update the access token of an authenticated account.
@@ -381,10 +381,10 @@ exports.getAuthAccount = function(uuid){
  * @returns {Object} The authenticated account object created by this action.
  */
 exports.updateAuthAccount = function(uuid, accessToken, expiresAt = undefined){
-    config.authenticationDatabase[uuid].accessToken = accessToken
-    config.authenticationDatabase[uuid].expiresAt = expiresAt
-    return config.authenticationDatabase[uuid]
-}
+    config.authenticationDatabase[uuid].accessToken = accessToken;
+    config.authenticationDatabase[uuid].expiresAt = expiresAt;
+    return config.authenticationDatabase[uuid];
+};
 
 /**
  * Update the tokens of an authenticated microsoft account.
@@ -399,12 +399,12 @@ exports.updateAuthAccount = function(uuid, accessToken, expiresAt = undefined){
  * @returns {Object} The authenticated account object created by this action.
  */
 exports.updateMicrosoftAuthAccount = function(uuid, accessToken, msAccessToken, msRefreshToken, msExpires, mcExpires){
-    config.authenticationDatabase[uuid].accessToken = accessToken
-    config.authenticationDatabase[uuid].expiresAt = mcExpires
-    config.authenticationDatabase[uuid].microsoft.access_token = msAccessToken
-    config.authenticationDatabase[uuid].microsoft.refresh_token = msRefreshToken
-    config.authenticationDatabase[uuid].microsoft.expires_at = msRefreshToken
-    return config.authenticationDatabase[uuid]
+    config.authenticationDatabase[uuid].accessToken = accessToken;
+    config.authenticationDatabase[uuid].expiresAt = mcExpires;
+    config.authenticationDatabase[uuid].microsoft.access_token = msAccessToken;
+    config.authenticationDatabase[uuid].microsoft.refresh_token = msRefreshToken;
+    config.authenticationDatabase[uuid].microsoft.expires_at = msRefreshToken;
+    return config.authenticationDatabase[uuid];
 }
 
 /**
