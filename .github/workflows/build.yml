@@ -7,7 +7,6 @@ on:
 
 jobs:
   release:
-    draft: true
     runs-on: ${{ matrix.os }}
 
     strategy:
