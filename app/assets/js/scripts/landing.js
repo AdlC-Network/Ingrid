@@ -230,14 +230,14 @@ function updateSelectedServer(serv){
     }
     setLaunchEnabled(serv != null);
     if(serv){
-        setLaunchButtonText(fs.pathExistsSync(path.join(ConfigManager.getDataDirectory(), 'instances', serv.getID())) ? 'PLAY' : 'INSTALL & PLAY');
+        setLaunchButtonText(fs.pathExistsSync(path.join(ConfigManager.getDataDirectory(), 'instances', serv.getID())) ? 'LANCER' : 'INSTALLER & LANCER');
     } else {
-        setLaunchButtonText('PLAY');
+        setLaunchButtonText('LANCER');
     }
 
 }
 // Real text is set in uibinder.js on distributionIndexDone.
-server_selection_button.innerHTML = '\u2022 Loading..';
+server_selection_button.innerHTML = '\u2022 Chargement..';
 server_selection_button.onclick = (e) => {
     e.target.blur();
     toggleServerSelection(true);
