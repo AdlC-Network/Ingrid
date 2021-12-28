@@ -25,12 +25,8 @@ jobs:
       - name: Release Drafter
         uses: release-drafter/release-drafter@v5.15.0
         with:
-          github_token: ${{ secrets.github_token }}
-          name-template: 'Build v$RESOLVED_VERSION'
-          tag-template: 'v$RESOLVED_VERSION'
-          template: |
-
-            $CHANGES
+          config-name: drafter.yml
+          disable-autolabeler: true
       - name: Build/master Electron app
         uses: samuelmeuli/action-electron-builder@v1
         with:
