@@ -1,4 +1,3 @@
-github_token: ${{ secrets.github_token }}
 name-template: 'Build v$RESOLVED_VERSION'
 tag-template: 'v$RESOLVED_VERSION'
 template: |

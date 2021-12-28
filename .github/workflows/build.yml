@@ -27,6 +27,8 @@ jobs:
         with:
           config-name: drafter.yml
           disable-autolabeler: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Build/master Electron app
         uses: samuelmeuli/action-electron-builder@v1
         with:
