@@ -32,11 +32,6 @@ jobs:
         with:
           name-template: 'Build v$RESOLVED_VERSION'
           tag-template: 'v$RESOLVED_VERSION'
-          template: |
-          ## Changements
-
-          $CHANGES
-
       - name: Build/master Electron app
         uses: samuelmeuli/action-electron-builder@v1
         with:
