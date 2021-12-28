@@ -21,11 +21,6 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: 14
-
-      - name: Tag check/add 
-        uses: Klemensas/action-autotag@stable
-        with:
-          tag_prefix: "v"
       
       - name: Release Drafter
         uses: release-drafter/release-drafter@v5.15.0
