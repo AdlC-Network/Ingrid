@@ -28,6 +28,9 @@ jobs:
           github_token: ${{ secrets.github_token }}
           name-template: 'Build v$RESOLVED_VERSION'
           tag-template: 'v$RESOLVED_VERSION'
+          template: |
+
+            $CHANGES
       - name: Build/master Electron app
         uses: samuelmeuli/action-electron-builder@v1
         with:
