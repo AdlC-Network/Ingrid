@@ -61,6 +61,7 @@ class Library extends Asset {
             return 'windows';
         } else if (opSys === 'linux'){
             return 'linux';
+        }else{
             return 'unknown_os';
         }
     }
@@ -474,8 +475,7 @@ class JavaGuard extends EventEmitter {
      * The validity is stored inside the `valid` property.
      */
     _validateJVMProperties(stderr){
-        const res = stderr;
-        const props = res.split('\n');
+        const props = stderr.split('\n');
 
         const goal = 2;
         let checksum = 0;
@@ -774,45 +774,45 @@ class JavaGuard extends EventEmitter {
      * @returns {Object[]} A sorted array of JVM meta objects.
      */
     static _sortValidJavaArray(validArr){
-        const retArr = validArr.sort((a, b) => {
+        return validArr.sort((a, b) => {
 
-            if(a.version.major === b.version.major){
-                
-                if(a.version.major < 9){
+            if (a.version.major === b.version.major) {
+
+                if (a.version.major < 9) {
                     // Java 8
-                    if(a.version.update === b.version.update){
-                        if(a.version.build === b.version.build){
-    
+                    if (a.version.update === b.version.update) {
+                        if (a.version.build === b.version.build) {
+
                             // Same version, give priority to JRE.
-                            if(a.execPath.toLowerCase().indexOf('jdk') > -1){
+                            if (a.execPath.toLowerCase().indexOf('jdk') > -1) {
                                 return b.execPath.toLowerCase().indexOf('jdk') > -1 ? 0 : 1;
                             } else {
                                 return -1;
                             }
-    
+
                         } else {
                             return a.version.build > b.version.build ? -1 : 1;
                         }
                     } else {
-                        return  a.version.update > b.version.update ? -1 : 1;
+                        return a.version.update > b.version.update ? -1 : 1;
                     }
                 } else {
                     // Java 9+
-                    if(a.version.minor === b.version.minor){
-                        if(a.version.revision === b.version.revision){
-    
+                    if (a.version.minor === b.version.minor) {
+                        if (a.version.revision === b.version.revision) {
+
                             // Same version, give priority to JRE.
-                            if(a.execPath.toLowerCase().indexOf('jdk') > -1){
+                            if (a.execPath.toLowerCase().indexOf('jdk') > -1) {
                                 return b.execPath.toLowerCase().indexOf('jdk') > -1 ? 0 : 1;
                             } else {
                                 return -1;
                             }
-    
+
                         } else {
                             return a.version.revision > b.version.revision ? -1 : 1;
                         }
                     } else {
-                        return  a.version.minor > b.version.minor ? -1 : 1;
+                        return a.version.minor > b.version.minor ? -1 : 1;
                     }
                 }
 
@@ -820,8 +820,6 @@ class JavaGuard extends EventEmitter {
                 return a.version.major > b.version.major ? -1 : 1;
             }
         });
-
-        return retArr;
     }
 
     /**
@@ -1461,7 +1459,7 @@ class AssetGuard extends EventEmitter {
 
     /**
      * Validate log config.
-     * 
+     *
      * @param {Object} versionData The version data for the assets.
      * @param {boolean} force Optional. If true, the asset index will be downloaded even if it exists locally. Defaults to false.
      * @returns {Promise.<void>} An empty promise to indicate the async processing has completed.

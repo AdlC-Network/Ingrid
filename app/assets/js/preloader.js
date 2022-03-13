@@ -31,7 +31,7 @@ function onDistroLoad(data){
 
 function sendLoadFromCacheNotification(data){
     if(data != null){
-        ipcRenderer.send('cachedDistributionNotification', data != null);
+        ipcRenderer.send('cachedDistributionNotification', true);
         logger.log('Sent a cached distribution notification alert');
     }
 }

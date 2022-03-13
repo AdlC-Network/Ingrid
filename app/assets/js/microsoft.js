@@ -178,9 +178,7 @@ exports.authMinecraft = async accessToken => {
     try {
         const XBLToken = await getXBLToken(accessToken)
         const XSTSToken = await getXSTSToken(XBLToken.token)
-        const MCToken = await getMCAccessToken(XBLToken.uhs, XSTSToken)
-
-        return MCToken
+        return await getMCAccessToken(XBLToken.uhs, XSTSToken)
     } catch (error) {
         await Promise.reject(error)
     }

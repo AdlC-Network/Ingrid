@@ -460,9 +460,10 @@ let  data = null
 
 /**
  * Process a log out.
- * 
+ *
  * @param {Element} val The log out button element.
  * @param {boolean} isLastAccount If this logout is on the last added account.
+ * @param skip
  */
 function processLogOut(val, isLastAccount, skip = false) {
     data = {
@@ -814,13 +815,14 @@ function resolveServerCodesForUI(){
     document.getElementById('settingsServerCodesListContent').innerHTML = servCodes
 
     /* Server Names List */
-    for(let ele of document.getElementsByClassName('settingsServerCodeServerNamesContent')){
+    let servNames;
+    for (let ele of document.getElementsByClassName('settingsServerCodeServerNamesContent')) {
         servNames = ''
         const code = ele.getAttribute('code')
         const servs = DistroManager.getDistribution().getServersFromCode(code)
         const valid = servs && servs.length
-        if(valid){
-            for(let serv of servs){
+        if (valid) {
+            for (let serv of servs) {
                 loggerSettings.log('server: ' + serv.getName())
                 servNames +=
                     `

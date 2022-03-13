@@ -374,10 +374,11 @@ exports.getAuthAccount = function(uuid){
 
 /**
  * Update the access token of an authenticated account.
- * 
+ *
  * @param {string} uuid The uuid of the authenticated account.
  * @param {string} accessToken The new Access Token.
- * 
+ * @param expiresAt
+ *
  * @returns {Object} The authenticated account object created by this action.
  */
 exports.updateAuthAccount = function(uuid, accessToken, expiresAt = undefined){
@@ -808,7 +809,7 @@ exports.getAllowPrerelease = function(def = false){
 
 /**
  * Change the status of whether or not the launcher should download prerelease versions.
- * 
+ *
  * @param {boolean} launchDetached Whether or not the launcher should download prerelease versions.
  */
 exports.setAllowPrerelease = function(allowPrerelease){

@@ -3109,14 +3109,12 @@ input:checked + .toggleSwitchSlider:before {
     border-radius: 50%;
     border: 2px solid #cad7e1;
     box-sizing: border-box;
-    background: rgba(1, 2, 1, 0.5);
     height: 120px;
     width: 120px;
     box-shadow: 0 6px 5px 0 rgba(0, 0, 0, 0.53);
     overflow: hidden;
     position: relative;
-    background-position: center;
-    background-repeat: no-repeat;
+    background: rgba(1, 2, 1, 0.5) no-repeat center;
     background-size: contain;
 }
 

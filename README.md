@@ -37,12 +37,12 @@ Coming Soon!
 
 If you download from the [Releases](https://github.com/AdlC-Network/Ingrid/releases) tab, select the installer for your system.
 
-| Platform | File |
-| -------- | ---- |
-| Windows x64 | `Ingrid-Launcher-setup-VERSION.exe` |
-| macOS x64 | `Ingrid-Launcher-setup-VERSION.dmg` |
+| Platform    | File                                      |
+|-------------|-------------------------------------------|
+| Windows x64 | `Ingrid-Launcher-setup-VERSION.exe`       |
+| macOS x64   | `Ingrid-Launcher-setup-VERSION.dmg`       |
 | macOS arm64 | `Ingrid-Launcher-setup-VERSION-arm64.dmg` |
-| Linux x64 | `Ingrid-Launcher-setup-VERSION.AppImage` |
+| Linux x64   | `Ingrid-Launcher-setup-VERSION.AppImage`  |
 
 ## Console
 
@@ -104,7 +104,7 @@ To build for your current platform.
 Build for a specific platform.
 
 | Platform    | Command              |
-| ----------- | -------------------- |
+|-------------|----------------------|
 | Windows x64 | `npm run dist:win`   |
 | macOS       | `npm run dist:mac`   |
 | Linux x64   | `npm run dist:linux` |

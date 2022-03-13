@@ -251,15 +251,17 @@ const refreshMojangStatuses = async function(){
     let tooltipEssentialHTML = '';
     let tooltipNonEssentialHTML = '';
 
+    let greenCount;
+    let greyCount;
     try {
         const statuses = await Mojang.status();
         greenCount = 0;
         greyCount = 0;
 
-        for(let i=0; i<statuses.length; i++){
+        for (let i = 0; i < statuses.length; i++) {
             const service = statuses[i];
 
-            if(service.essential){
+            if (service.essential) {
                 tooltipEssentialHTML += `<div class="mojangStatusContainer">
                     <span class="mojangStatusIcon" style="color: ${Mojang.statusToHex(service.status)};">&#8226;</span>
                     <span class="mojangStatusName">${service.name}</span>
@@ -271,12 +273,12 @@ const refreshMojangStatuses = async function(){
                 </div>`;
             }
 
-            if(service.status === 'yellow' && status !== 'red'){
+            if (service.status === 'yellow' && status !== 'red') {
                 status = 'yellow';
-            } else if(service.status === 'red'){
+            } else if (service.status === 'red') {
                 status = 'red';
             } else {
-                if(service.status === 'grey'){
+                if (service.status === 'grey') {
                     ++greyCount;
                 }
                 ++greenCount;
@@ -284,8 +286,8 @@ const refreshMojangStatuses = async function(){
 
         }
 
-        if(greenCount === statuses.length){
-            if(greyCount === statuses.length){
+        if (greenCount === statuses.length) {
+            if (greyCount === statuses.length) {
                 status = 'grey';
             } else {
                 status = 'green';

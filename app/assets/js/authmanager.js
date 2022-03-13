@@ -142,11 +142,9 @@ exports.validateSelected = async function(){
     if(!isValid){
         try{
             if (ConfigManager.getSelectedAccount().type === 'microsoft') {
-                const validate = await validateSelectedMicrosoft();
-                return validate;
+                return await validateSelectedMicrosoft();
             } else {
-                const validate = await validateSelectedMojang();
-                return validate;
+                return await validateSelectedMojang();
             }
         } catch (error) {
             return Promise.reject(error);

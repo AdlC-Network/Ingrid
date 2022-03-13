@@ -243,14 +243,14 @@ Other times, you may want to store the files maven-style, such as with libraries
 
 The resolved/provided paths are appended to a base path depending on the module's declared type.
 
-| Type | Path |
-| ---- | ---- |
-| `ForgeHosted` | ({`commonDirectory`}/libraries/{`path` OR resolved}) |
-| `LiteLoader` | ({`commonDirectory`}/libraries/{`path` OR resolved}) |
-| `Library` | ({`commonDirectory`}/libraries/{`path` OR resolved}) |
-| `ForgeMod` | ({`commonDirectory`}/modstore/{`path` OR resolved}) |
-| `LiteMod` | ({`commonDirectory`}/modstore/{`path` OR resolved}) |
-| `File` | ({`instanceDirectory`}/{`Server.id`}/{`path` OR resolved}) |
+| Type          | Path                                                       |
+|---------------|------------------------------------------------------------|
+| `ForgeHosted` | ({`commonDirectory`}/libraries/{`path` OR resolved})       |
+| `LiteLoader`  | ({`commonDirectory`}/libraries/{`path` OR resolved})       |
+| `Library`     | ({`commonDirectory`}/libraries/{`path` OR resolved})       |
+| `ForgeMod`    | ({`commonDirectory`}/modstore/{`path` OR resolved})        |
+| `LiteMod`     | ({`commonDirectory`}/modstore/{`path` OR resolved})        |
+| `File`        | ({`instanceDirectory`}/{`Server.id`}/{`path` OR resolved}) |
 
 The `commonDirectory` and `instanceDirectory` values are stored in the launcher's config.json.
 

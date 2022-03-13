@@ -607,10 +607,8 @@ exports.pullLocal = function(){
                 data = DistroIndex.fromJSON(JSON.parse(d))
                 resolve(data)
                 logger.info('Pulled distribution from local.')
-                return
             } else {
                 reject(err)
-                return
             }
         })
     })
