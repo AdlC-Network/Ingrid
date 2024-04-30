@@ -28,7 +28,7 @@
     "async": "^3.2.0",
     "chokidar": "^3.5.3",
     "discord-rpc": "^3.2.0",
-    "ejs": "^3.1.7",
+    "ejs": "^3.1.10",
     "ejs-electron": "^2.1.1",
     "electron-updater": "^4.6.5",
     "es6": "^0.0.7",
